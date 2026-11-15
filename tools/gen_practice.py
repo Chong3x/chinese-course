@@ -1,6 +1,8 @@
 import json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from content import LESSONS
+from content_l1 import L1
+LESSONS = [L1] + LESSONS
 
 OUT = sys.argv[1]
 ONLY = sys.argv[2:]  # lesson ids
@@ -13,7 +15,7 @@ def build(L):
     for c, py, w in L['write']:
         strokes[c] = json.load(open(os.path.join(DATA_DIR, c + '.json'), encoding='utf-8'))
     data = {
-        'id': L['id'], 'title': f"第 {L['num']} 课 · {L['title']}", 'sub': '课后练习 · HSK 2',
+        'id': L['id'], 'title': f"第 {L['num']} 课 · {L['title']}", 'sub': L.get('sub', '课后练习 · HSK 2'),
         'words': [list(x) for x in L['words']], 'text_title': L['text_title'],
         'text': [list(x) for x in L['text']], 'narrative': len(set(s for s, _ in L['text'])) == 1,
         'q': [list(x) for x in L['q']], 'fill': [list(x) for x in L['fill']], 'fill_bank': L['fill_bank'],

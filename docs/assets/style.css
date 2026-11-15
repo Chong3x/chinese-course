@@ -68,5 +68,8 @@ footer{margin-top:40px;padding:24px 0 40px;color:var(--soft);font-size:13px;bord
 .qs details{background:var(--card);border-radius:12px;padding:10px 14px;margin-bottom:8px}
 .chars{display:flex;gap:10px;flex-wrap:wrap}
 .chars span{background:#fff;border:2px solid var(--line);border-radius:12px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700}
+.lang{border:none;border-radius:10px;padding:6px 8px;font-size:14px;background:#24496B;color:#F7F5EE;font-family:inherit;margin-left:14px}
+.sub-tr{font-size:15px;color:#C9DCE8;margin:-4px 0 8px}
+.lcard .sub-tr{color:var(--soft);font-size:14px;margin:0}
 .pager{display:flex;justify-content:space-between;gap:10px;margin-top:30px}
-@media (max-width:640px){.hero h1{font-size:34px}.steps{grid-template-columns:1fr 1fr}.lhead h1{font-size:30px}nav.top .links a{margin-left:10px;font-size:14px}.say{font-size:19px}}
+@media (max-width:640px){nav.top .brand{font-size:18px;white-space:nowrap}nav.top .links a{display:none}.lang{margin-left:6px}.hero h1{font-size:34px}.steps{grid-template-columns:1fr 1fr}.lhead h1{font-size:30px}nav.top .links a{margin-left:10px;font-size:14px}.say{font-size:19px}}

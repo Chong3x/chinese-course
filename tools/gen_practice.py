@@ -2,6 +2,7 @@ import json, os, sys
 sys.path.insert(0, os.path.dirname(__file__))
 from content import LESSONS
 from content_l1 import L1
+from i18n import PRACTICE, LANGS, TITLES
 LESSONS = [L1] + LESSONS
 
 OUT = sys.argv[1]
@@ -21,6 +22,7 @@ def build(L):
         'q': [list(x) for x in L['q']], 'fill': [list(x) for x in L['fill']], 'fill_bank': L['fill_bank'],
         'order': [[list(c), a] for c, a in L['order']], 'fix': [list(x) for x in L['fix']],
         'write': [{'c': c, 'py': py, 'word': w} for c, py, w in L['write']],
+        'tr': TITLES.get(L['id'], {}),
     }
     def js(o):  # safe for inline <script>
         return json.dumps(o, ensure_ascii=False).replace('</', '<\\/')
@@ -28,7 +30,7 @@ def build(L):
     audio = json.load(open(audio_path, encoding='utf-8')) if os.path.exists(audio_path) else {}
     html = (TPL.replace('__TITLE__', f"第 {L['num']} 课 · {L['title']} · 课后练习")
                .replace('__HANZI_WRITER__', HW.replace('</script', '<\\/script'))
-               .replace('__DATA__', js(data)).replace('__STROKES__', js(strokes)).replace('__AUDIO__', js(audio)))
+               .replace('__DATA__', js(data)).replace('__I18N__', js(PRACTICE)).replace('__LANGS__', js(LANGS)).replace('__STROKES__', js(strokes)).replace('__AUDIO__', js(audio)))
     os.makedirs(OUT, exist_ok=True)
     p = os.path.join(OUT, f"{L['id']}_practice.html")
     open(p, 'w', encoding='utf-8').write(html)

@@ -15,6 +15,9 @@ button{font-family:inherit;cursor:pointer}
 header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
 header.top .t1{font-size:14px;color:var(--blue);font-weight:700;letter-spacing:1px}
 header.top h1{margin:2px 0 0;font-size:30px}
+header.top .tr{font-size:14px;color:var(--soft)}
+.lang{border:2px solid var(--line);border-radius:10px;padding:6px 8px;font-size:14px;background:#fff;color:var(--ink);font-family:inherit}
+.hright{display:flex;gap:8px;align-items:center}
 .back{border:none;background:var(--sky);color:var(--ink);border-radius:12px;padding:10px 14px;font-size:16px;font-weight:700}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
 .stat{background:var(--card);border-radius:16px;padding:14px;text-align:center}
@@ -83,6 +86,17 @@ textarea{width:100%;min-height:150px;font-size:16px;border-radius:12px;border:2p
 const L = __DATA__;
 const STROKES = __STROKES__;
 const AUDIO = __AUDIO__;
+const T = __I18N__;
+const LANGS = __LANGS__;
+let LANG = 'zh'; try{ LANG = localStorage.getItem('ui-lang') || 'zh'; }catch(e){}
+if(!T.back[LANG]) LANG='zh';
+function t(k, v){ let s=(T[k]||{})[LANG]; if(s===undefined) s=(T[k]||{}).zh||k; if(v) for(const x in v) s=String(s).split('{'+x+'}').join(v[x]); return s; }
+function tz(k, v){ const keep=LANG; LANG='zh'; const s=t(k,v); LANG=keep; return s; }
+function setLang(l){ LANG=l; try{ localStorage.setItem('ui-lang', l); }catch(e){} applyStatic(); home(); }
+function applyStatic(){ document.querySelectorAll('[data-i]').forEach(el=>el.textContent=t(el.dataset.i)); }
+function langSel(){ return `<select class="lang" onchange="setLang(this.value)">${LANGS.map(([k,n])=>`<option value="${k}" ${k===LANG?'selected':''}>${n}</option>`).join('')}</select>`; }
+function sc(x){ if(!x) return ''; if(typeof x==='string') return x; return t('sc_'+x[0],{a:x[1],b:x[2]}); }
+function scz(x){ if(!x) return ''; if(typeof x==='string') return x; return tz('sc_'+x[0],{a:x[1],b:x[2]}); }
 const KEY = 'hsk-practice-' + L.id;
 let S = load();
 function load(){
@@ -136,49 +150,36 @@ function speak(text){
 
 // ---------- 页面 ----------
 const app=document.getElementById('app');
-function header(title, sub, back=true){
-  return `<header class="top"><div><div class="t1">${esc(sub)}</div><h1 class="fun">${esc(title)}</h1></div>${back?'<button class="back" onclick="home()">← 返回</button>':''}</header>`;
+function header(title, sub, back=true, tr=''){
+  return `<header class="top"><div><div class="t1">${esc(sub)}</div><h1 class="fun">${esc(title)}</h1>${tr?`<div class="tr">${esc(tr)}</div>`:''}</div><div class="hright">${back?`<button class="back" onclick="home()">${t('back')}</button>`:langSel()}</div></header>`;
 }
-const PLAN = {
-  0:{k:'周日',t:'休息日 😊',d:'今天休息！想玩的话，可以做一轮“记新词”。休息不会断掉连续天数。',m:['cards']},
-  1:{k:'周一 · 上课日',t:'上课日：复习 5 分钟',d:'上课前过一遍“记新词”，上课会更轻松。',m:['cards']},
-  2:{k:'周二',t:'记新词 + 听一听',d:'今天把本课的生词过一遍，再听音选汉字。大约 15 分钟。',m:['cards','listen']},
-  3:{k:'周三 · 上课日',t:'上课日：复习 5 分钟',d:'上课前过一遍“记新词”。',m:['cards']},
-  4:{k:'周四',t:'认一认 + 读一读',d:'看汉字选意思，再读课文三遍。大约 15 分钟。',m:['recog','read']},
-  5:{k:'周五',t:'写一写 + 练一练',d:'写本课的汉字，再做作业题。大约 20 分钟。',m:['write','hw']},
-  6:{k:'周六',t:'周末小测',d:'15 道题，看看这周学得怎么样！',m:['quiz']},
-};
-const MODS = {
-  cards:{ic:'🃏',t:'记新词',s:'看汉字，说意思'},
-  listen:{ic:'👂',t:'听一听',s:'听发音，选汉字'},
-  recog:{ic:'👀',t:'认一认',s:'看汉字，选意思'},
-  read:{ic:'📖',t:'读一读',s:'读课文，回答问题'},
-  write:{ic:'✍️',t:'写一写',s:'学写本课的字'},
-  hw:{ic:'📝',t:'练一练',s:'填空、排词、找错'},
-  quiz:{ic:'🏆',t:'周末小测',s:'15 道综合题'},
-};
+const PLANS = {0:['p0',['cards']],1:['p1',['cards']],2:['p2',['cards','listen']],3:['p1',['cards']],4:['p4',['recog','read']],5:['p5',['write','hw']],6:['p6',['quiz']]};
+const MODK = ['cards','listen','recog','read','write','hw','quiz'];
+const ICON = {cards:'🃏',listen:'👂',recog:'👀',read:'📖',write:'✍️',hw:'📝',quiz:'🏆'};
+function mt(k){ return t('m_'+k); }
 function home(){
   const n=nMastered(), tot=L.words.length, p=Math.round(n/tot*100);
-  const plan=PLAN[new Date().getDay()]; const lg=S.log[today()]||{};
-  app.innerHTML = header(L.title, L.sub, false) + `
+  const d=new Date().getDay(); const pl=PLANS[d]; const lg=S.log[today()]||{};
+  const k=t('wd')[d]+((d===1||d===3)?' · '+t('classDay'):'');
+  app.innerHTML = header(L.title, L.sub, false, (L.tr||{})[LANG]&&LANG!=='zh'?L.tr[LANG]:'') + `
   <div class="stats">
-    <div class="stat"><b>${n}/${tot}</b><span>已掌握的词</span><div class="bar"><i style="width:${p}%"></i></div></div>
-    <div class="stat"><b>⭐ ${S.stars}</b><span>星星</span></div>
-    <div class="stat"><b>🔥 ${S.days}</b><span>连续学习天数</span></div>
+    <div class="stat"><b>${n}/${tot}</b><span>${t('mastered')}</span><div class="bar"><i style="width:${p}%"></i></div></div>
+    <div class="stat"><b>⭐ ${S.stars}</b><span>${t('stars')}</span></div>
+    <div class="stat"><b>🔥 ${S.days}</b><span>${t('streak')}</span></div>
   </div>
-  <div class="today"><div class="k">今日任务 · ${plan.k}</div><h2 class="fun">${plan.t}</h2><p>${plan.d}</p>
-    <div class="go">${plan.m.map(m=>`<button onclick="openMod('${m}')">${MODS[m].ic} ${MODS[m].t}${lg[m]?' ✓':''}</button>`).join('')}</div></div>
-  <div class="grid">${Object.entries(MODS).map(([k,m])=>`<button class="mod" onclick="openMod('${k}')"><div class="ic">${m.ic}</div><b>${m.t}</b><span>${m.s}</span>${lg[k]?`<div class="done">今天 ✓ ${lg[k].score||''}</div>`:''}</button>`).join('')}</div>
-  <button class="report" onclick="report()">📋 生成今日汇报，发到群里</button>
-  <p class="note">一个词连续答对 ${MASTER} 次，就算“掌握”。进度只保存在这台设备的浏览器里，请用同一台设备练习。${canSpeak()?'':'这台设备没有中文语音，听力题会用拼音代替。'}</p>`;
+  <div class="today"><div class="k">${t('todayTask')} · ${k}</div><h2 class="fun">${t(pl[0]+'t')}</h2><p>${t(pl[0]+'d')}</p>
+    <div class="go">${pl[1].map(m=>`<button onclick="openMod('${m}')">${ICON[m]} ${mt(m)}${lg[m]?' ✓':''}</button>`).join('')}</div></div>
+  <div class="grid">${MODK.map(k=>`<button class="mod" onclick="openMod('${k}')"><div class="ic">${ICON[k]}</div><b>${mt(k)}</b><span>${t('s_'+k)}</span>${lg[k]?`<div class="done">${t('todayDone')} ${sc(lg[k].score)}</div>`:''}</button>`).join('')}</div>
+  <button class="report" onclick="report()">${t('reportBtn')}</button>
+  <p class="note">${t('note',{n:MASTER})}${canSpeak()?'':' '+t('noVoice')}</p>`;
   window.scrollTo(0,0);
 }
 function openMod(m){ ({cards,listen,recog,read,write,hw,quiz})[m](); }
 function finish(mod, score, starsGot){
   const lg=dayLog(); lg[mod]={score}; S.stars+=starsGot; touchDay(); save();
-  app.innerHTML = header(MODS[mod].t, L.sub) + `<div class="panel win"><div class="big">🎉</div><div class="mid fun">太好了！完成了！</div>
-  <p class="small">${esc(score)}　·　得到 ⭐ ${starsGot}</p><p class="small">已掌握 ${nMastered()}/${L.words.length} 个词</p>
-  <div class="row2"><button class="btn b-gold" onclick="openMod('${mod}')">再来一轮</button><button class="btn b-blue" onclick="home()">回到首页</button></div></div>`;
+  app.innerHTML = header(mt(mod), L.sub) + `<div class="panel win"><div class="big">🎉</div><div class="mid fun">${t('finish')}</div>
+  <p class="small">${esc(sc(score))}　·　${t('gotStars')} ⭐ ${starsGot}</p><p class="small">${t('masteredN',{a:nMastered(),b:L.words.length})}</p>
+  <div class="row2"><button class="btn b-gold" onclick="openMod('${mod}')">${t('again')}</button><button class="btn b-blue" onclick="home()">${t('home')}</button></div></div>`;
 }
 function pickWords(n){
   const not=shuffle(L.words.filter(x=>!mastered(x[0])).map(x=>x[0]));
@@ -190,13 +191,13 @@ function pickWords(n){
 function cards(){
   let q=pickWords(10), i=0, good=0, total=q.length;
   function show(flip){
-    if(!q.length){ return finish('cards', `认识 ${good}/${total}`, good>=8?3:good>=5?2:1); }
+    if(!q.length){ return finish('cards', ['cards',good,total], good>=8?3:good>=5?2:1); }
     const w=W[q[0]];
-    app.innerHTML = header('记新词', L.sub) + `<div class="panel"><div class="prog">还剩 ${q.length} 张</div>
+    app.innerHTML = header(mt('cards'), L.sub) + `<div class="panel"><div class="prog">${t('cardsLeft',{n:q.length})}</div>
       <div class="big">${esc(w.w)}</div>
       ${flip?`<div class="mid">${esc(w.py)}</div><p class="small">${esc(w.en)}<br>${esc(w.ru)}</p><button class="spk" onclick="speak('${w.w}')">🔊</button>
-        <div class="row2"><button class="btn b-red" id="no">还不熟 ✗</button><button class="btn b-green" id="yes">我认识 ✓</button></div>`
-      :`<p class="small">先自己说出拼音和意思，再看答案。</p><div class="row2"><button class="btn b-blue" id="flip">看答案</button></div>`}</div>`;
+        <div class="row2"><button class="btn b-red" id="no">${t('notYet')}</button><button class="btn b-green" id="yes">${t('know')}</button></div>`
+      :`<p class="small">${t('cardsHint')}</p><div class="row2"><button class="btn b-blue" id="flip">${t('show')}</button></div>`}</div>`;
     if(flip){ speak(w.w);
       document.getElementById('yes').onclick=()=>{ mark(w.w,true); good++; q.shift(); show(false); };
       document.getElementById('no').onclick=()=>{ mark(w.w,false); const c=q.shift(); q.splice(Math.min(2,q.length),0,c); show(false); };
@@ -208,9 +209,9 @@ function cards(){
 function mcq(mod, items, render){
   let i=0, good=0; const n0=items.length;
   function next(){
-    if(i>=items.length){ const sc=`第一次就答对 ${good}/${n0}`; return finish(mod, sc, good>=n0*0.9?3:good>=n0*0.6?2:1); }
+    if(i>=items.length){ return finish(mod, ['first',good,n0], good>=n0*0.9?3:good>=n0*0.6?2:1); }
     const it=items[i];
-    app.innerHTML = header(MODS[mod].t, L.sub) + `<div class="panel"><div class="prog">${it.again?'🔁 再试一次　·　':''}第 ${Math.min(i+1,n0)} / ${n0} 题</div>${render.q(it)}
+    app.innerHTML = header(mt(mod), L.sub) + `<div class="panel"><div class="prog">${it.again?t('retry')+'　·　':''}${t('qnum',{i:Math.min(i+1,n0),n:n0})}</div>${render.q(it)}
       <div class="opts">${it.opts.map((o,k)=>`<button class="opt ${render.small?'sm':''}" data-k="${k}">${esc(o)}</button>`).join('')}</div><div class="fb" id="fb"></div></div>`;
     if(render.after) render.after(it);
     app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
@@ -220,7 +221,7 @@ function mcq(mod, items, render){
       app.querySelectorAll('.opt').forEach(x=>{ if(it.opts[+x.dataset.k]===it.ans) x.classList.add('ok'); });
       if(it.word) mark(it.word, right);
       const fb=document.getElementById('fb');
-      fb.className='fb '+(right?'ok':'no'); fb.textContent = right? '对了！👍' : '不对，看看正确答案。'+(it.explain?' '+it.explain:'');
+      fb.className='fb '+(right?'ok':'no'); fb.textContent = right? t('right') : t('wrong');
       if(right && !it.again) good++; if(!right && it.retry) items.push(Object.assign({},it,{retry:false,again:true,opts:shuffle(it.opts)}));
       i++; setTimeout(next, right?700:1600);
     });
@@ -235,8 +236,8 @@ function listen(){
   const voice=canSpeak();
   const items=pickWords(10).map(w=>({word:w, ans:w, opts:shuffle([w].concat(distract(w,'w'))), retry:true}));
   mcq('listen', items, {
-    q: it => voice ? `<p class="small">听一听，选出你听到的词</p><button class="spk" id="sp">🔊</button>`
-                   : `<p class="small">（这台设备没有中文语音）看拼音，选汉字</p><div class="mid">${esc(W[it.word].py)}</div>`,
+    q: it => voice ? `<p class="small">${t('listenQ')}</p><button class="spk" id="sp">🔊</button>`
+                   : `<p class="small">${t('noVoiceQ')}</p><div class="mid">${esc(W[it.word].py)}</div>`,
     after: it => { const b=document.getElementById('sp'); if(b){ b.onclick=()=>speak(it.word); setTimeout(()=>speak(it.word),250); } }
   });
 }
@@ -248,8 +249,8 @@ function recog(){
     : {word:w, ans:w, opts:shuffle([w].concat(distract(w,'w'))), qtype:'m2h', retry:true});
   mcq('recog', items, {
     small:false,
-    q: it => it.qtype==='h2m' ? `<p class="small">这个词是什么意思？</p><div class="big">${esc(it.word)}</div>`
-                              : `<p class="small">哪个词是这个意思？</p><div class="mid">${esc(W[it.word].en)}</div><p class="small">${esc(W[it.word].ru)}</p>`,
+    q: it => it.qtype==='h2m' ? `<p class="small">${t('h2m')}</p><div class="big">${esc(it.word)}</div>`
+                              : `<p class="small">${t('m2h')}</p><div class="mid">${esc(W[it.word].en)}</div><p class="small">${esc(W[it.word].ru)}</p>`,
     after: it => { if(it.qtype==='h2m') app.querySelectorAll('.opt').forEach(b=>b.classList.add('sm')); }
   });
 }
@@ -261,11 +262,11 @@ function plain(s){ return s.replace(/[{}]/g,''); }
 function read(){
   let times=0;
   function page(){
-    app.innerHTML = header('读一读', L.sub) + `<div class="panel" style="text-align:left">
-      <p class="small">先自己读，不会的词点一下看拼音，点 🔊 听一句。读完一遍按“我读完了一遍”。</p>
+    app.innerHTML = header(mt('read'), L.sub) + `<div class="panel" style="text-align:left">
+      <p class="small">${t('readHint')}</p>
       <h2 class="fun" style="text-align:center">${esc(L.text_title)}</h2>
       ${L.text.map((l,k)=>`<div class="line">${l[0]&&!L.narrative?`<span class="who">${esc(l[0])}</span>`:''}<div class="say">${lineHTML(l[1])}</div><button class="play" data-k="${k}">🔊</button></div>`).join('')}
-      <div class="row2"><button class="btn b-gold" id="once">我读完了一遍（${times}/3）</button>${times>=3?'<button class="btn b-blue" id="qs">回答问题 →</button>':''}</div></div>`;
+      <div class="row2"><button class="btn b-gold" id="once">${t('readOnce',{n:times})}</button>${times>=3?`<button class="btn b-blue" id="qs">${t('toQs')}</button>`:''}</div></div>`;
     app.querySelectorAll('.play').forEach(b=>b.onclick=()=>speak(plain(L.text[+b.dataset.k][1])));
     document.getElementById('once').onclick=()=>{ times++; touchDay(); page(); };
     const qb=document.getElementById('qs'); if(qb) qb.onclick=questions;
@@ -273,7 +274,7 @@ function read(){
   function questions(){
     const answers=L.q.map(x=>x[1]);
     const items=L.q.map(x=>({ans:x[1], opts:shuffle(answers), q:x[0]}));
-    mcq('read', items, {small:true, q: it=>`<p class="small">课文问题</p><div class="mid">${esc(it.q)}</div>`});
+    mcq('read', items, {small:true, q: it=>`<p class="small">${t('textQ')}</p><div class="mid">${esc(it.q)}</div>`});
   }
   page();
 }
@@ -282,33 +283,33 @@ function write(){
   const chars=L.write; let cur=0, writer=null;
   function page(){
     const c=chars[cur];
-    app.innerHTML = header('写一写', L.sub) + `<div class="panel">
-      <p class="small">这些是官方 HSK 要求会写的字。先看笔顺，再自己写（手指或鼠标）。</p>
+    app.innerHTML = header(mt('write'), L.sub) + `<div class="panel">
+      <p class="small">${t('writeHint')}</p>
       <div class="charlist">${chars.map((x,k)=>`<button class="${k===cur?'cur':''} ${S.written[x.c]?'ok':''}" data-k="${k}">${x.c}</button>`).join('')}</div>
-      <div class="mid">${esc(c.c)}　<span class="small">${esc(c.py)} · 在“${esc(c.word)}”里</span></div>
+      <div class="mid">${esc(c.c)}　<span class="small">${esc(c.py)} · ${esc(t('inWord',{w:c.word}))}</span></div>
       <div class="hw"><div id="hzbox"></div></div>
       <div class="fb" id="fb"></div>
-      <div class="row2"><button class="btn b-sky" id="anim">看笔顺 ▶</button><button class="btn b-blue" id="quiz">我来写 ✍️</button>${S.written[c.c]?'':''}</div>
-      <p class="note">已经会写 ${chars.filter(x=>S.written[x.c]).length} / ${chars.length} 个字</p></div>`;
+      <div class="row2"><button class="btn b-sky" id="anim">${t('anim')}</button><button class="btn b-blue" id="quiz">${t('myTurn')}</button>${S.written[c.c]?'':''}</div>
+      <p class="note">${t('canWrite',{a:chars.filter(x=>S.written[x.c]).length,b:chars.length})}</p></div>`;
     app.querySelectorAll('.charlist button').forEach(b=>b.onclick=()=>{ cur=+b.dataset.k; page(); });
     const size=Math.min(300, window.innerWidth-80);
-    if(typeof HanziWriter==='undefined' || !STROKES[c.c]){ document.getElementById('hzbox').innerHTML='<p class="small" style="padding:20px">这台设备不能显示笔顺，请在纸上写 5 遍。</p>'; return; }
+    if(typeof HanziWriter==='undefined' || !STROKES[c.c]){ document.getElementById('hzbox').innerHTML=`<p class="small" style="padding:20px">${t('noStroke')}</p>`; return; }
     writer = HanziWriter.create('hzbox', c.c, {width:size, height:size, padding:12, showOutline:true, strokeAnimationSpeed:1, delayBetweenStrokes:250,
       charDataLoader:(ch, onLoad)=>onLoad(STROKES[ch]), strokeColor:'#14304A', radicalColor:'#17698F', outlineColor:'#DDDDDD', drawingColor:'#17698F', highlightColor:'#2FA4D8'});
     document.getElementById('anim').onclick=()=>writer.animateCharacter();
     document.getElementById('quiz').onclick=()=>startQuiz(c);
   }
   function startQuiz(c){
-    const fb=document.getElementById('fb'); fb.className='fb'; fb.textContent='按笔顺一笔一笔写。';
+    const fb=document.getElementById('fb'); fb.className='fb'; fb.textContent=t('strokeGo');
     let round=0;
     function go(outline){
       writer.quiz({showOutline:outline, showHintAfterMisses:2, leniency:1.1,
         onComplete: d => {
           round++;
-          if(round===1){ fb.className='fb ok'; fb.textContent='很好！现在不看灰色的字，自己再写一遍。'; setTimeout(()=>{ writer.hideOutline(); go(false); }, 900); }
+          if(round===1){ fb.className='fb ok'; fb.textContent=t('round2'); setTimeout(()=>{ writer.hideOutline(); go(false); }, 900); }
           else { const ok=d.totalMistakes<=2; fb.className='fb '+(ok?'ok':'no');
-            fb.textContent = ok ? `太棒了！你会写“${c.c}”了！⭐` : '有点难，再写一次吧！';
-            if(ok && !S.written[c.c]){ S.written[c.c]=true; S.stars+=1; touchDay(); save(); dayLog().write={score:`会写 ${chars.filter(x=>S.written[x.c]).length}/${chars.length}`}; save(); }
+            fb.textContent = ok ? t('wroteOk',{c:c.c}) : t('wroteNo');
+            if(ok && !S.written[c.c]){ S.written[c.c]=true; S.stars+=1; touchDay(); save(); dayLog().write={score:['write',chars.filter(x=>S.written[x.c]).length,chars.length]}; save(); }
             writer.showOutline(); }
         }});
     }
@@ -325,34 +326,34 @@ function hw(){
   let i=0, good=0;
   function norm(s){ return s.replace(/[，。！？、“”：；\s,.!?]/g,''); }
   function next(){
-    if(i>=items.length){ return finish('hw', `答对 ${good}/${items.length}`, good>=items.length*0.9?3:good>=items.length*0.6?2:1); }
+    if(i>=items.length){ return finish('hw', ['hw',good,items.length], good>=items.length*0.9?3:good>=items.length*0.6?2:1); }
     const it=items[i];
-    const head=`<div class="prog">第 ${i+1} / ${items.length} 题　·　答对 ${good}</div>`;
+    const head=`<div class="prog">${t('qnum',{i:i+1,n:items.length})}</div>`;
     if(it.t==='fill' || it.t==='fix'){
-      const q = it.t==='fill' ? `<p class="small">选词填空</p><div class="mid" style="color:var(--ink)">${esc(it.q.replace('___','（　　）'))}</div>`
-                              : `<p class="small">哪一句是对的？</p>`;
-      app.innerHTML = header('练一练', L.sub) + `<div class="panel">${head}${q}<div class="opts">${it.opts.map((o,k)=>`<button class="opt ${it.t==='fix'?'sm':''}" data-k="${k}">${esc(o)}</button>`).join('')}</div><div class="fb" id="fb"></div></div>`;
+      const q = it.t==='fill' ? `<p class="small">${t('fillQ')}</p><div class="mid" style="color:var(--ink)">${esc(it.q.replace('___','（　　）'))}</div>`
+                              : `<p class="small">${t('fixQ')}</p>`;
+      app.innerHTML = header(mt('hw'), L.sub) + `<div class="panel">${head}${q}<div class="opts">${it.opts.map((o,k)=>`<button class="opt ${it.t==='fix'?'sm':''}" data-k="${k}">${esc(o)}</button>`).join('')}</div><div class="fb" id="fb"></div></div>`;
       app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
         if(app.querySelector('.opt.ok')) return;
         const right=it.opts[+b.dataset.k]===it.ans; b.classList.add(right?'ok':'no');
         app.querySelectorAll('.opt').forEach(x=>{ if(it.opts[+x.dataset.k]===it.ans) x.classList.add('ok'); });
         const fb=document.getElementById('fb'); fb.className='fb '+(right?'ok':'no');
-        fb.textContent = right?'对了！👍':'不对。正确答案：'+(it.t==='fill'?it.q.replace('___',it.ans):it.ans);
+        fb.textContent = right?t('right'):t('wrongAns')+(it.t==='fill'?it.q.replace('___',it.ans):it.ans);
         if(right) good++; i++; setTimeout(next, right?700:2000);
       });
     } else {
       let built=[];
       function draw(){
-        app.innerHTML = header('练一练', L.sub) + `<div class="panel">${head}<p class="small">按顺序点词语，组成一句话</p>
+        app.innerHTML = header(mt('hw'), L.sub) + `<div class="panel">${head}<p class="small">${t('orderQ')}</p>
           <div class="answer">${esc(built.map(k=>it.chips[k]).join(''))}</div>
           <div class="chips">${it.chips.map((c,k)=>`<button class="chip ${built.includes(k)?'used':''}" data-k="${k}">${esc(c)}</button>`).join('')}</div>
-          <div class="row2"><button class="btn b-sky" id="clr">重来</button><button class="btn b-blue" id="chk">检查</button></div><div class="fb" id="fb"></div></div>`;
+          <div class="row2"><button class="btn b-sky" id="clr">${t('clear')}</button><button class="btn b-blue" id="chk">${t('check')}</button></div><div class="fb" id="fb"></div></div>`;
         app.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{ const k=+b.dataset.k; if(!built.includes(k)){ built.push(k); draw(); } });
         document.getElementById('clr').onclick=()=>{ built=[]; draw(); };
         document.getElementById('chk').onclick=()=>{
           const right=norm(built.map(k=>it.chips[k]).join(''))===norm(it.ans);
           const fb=document.getElementById('fb'); fb.className='fb '+(right?'ok':'no');
-          fb.textContent = right?'对了！👍 '+it.ans : '不对。正确答案：'+it.ans;
+          fb.textContent = right?t('right')+' '+it.ans : t('wrongAns')+it.ans;
           if(right) good++; i++; setTimeout(next, right?900:2200);
         };
       }
@@ -372,36 +373,36 @@ function quiz(){
     return {word:w, ans:w, opts:shuffle([w].concat(distract(w,'w'))), kind:'m2h'};
   });
   mcq('quiz', items, {
-    q: it => it.kind==='listen' ? `<p class="small">听一听，选汉字</p><button class="spk" id="sp">🔊</button>`
-          : it.kind==='h2m' ? `<p class="small">这个词是什么意思？</p><div class="big">${esc(it.word)}</div>`
-          : `<p class="small">哪个词是这个意思？</p><div class="mid">${esc(W[it.word].en)}</div>`,
+    q: it => it.kind==='listen' ? `<p class="small">${t('quizListen')}</p><button class="spk" id="sp">🔊</button>`
+          : it.kind==='h2m' ? `<p class="small">${t('h2m')}</p><div class="big">${esc(it.word)}</div>`
+          : `<p class="small">${t('m2h')}</p><div class="mid">${esc(W[it.word].en)}</div>`,
     after: it => { if(it.kind==='h2m') app.querySelectorAll('.opt').forEach(b=>b.classList.add('sm'));
                    const b=document.getElementById('sp'); if(b){ b.onclick=()=>speak(it.word); setTimeout(()=>speak(it.word),250);} }
   });
 }
 // 汇报
 function report(){
-  const t=new Date(), lg=S.log[today()]||{};
-  const lines=[`${t.getMonth()+1} 月 ${t.getDate()} 日 · ${L.title}`];
-  const keys=Object.keys(MODS).filter(k=>lg[k]);
-  if(keys.length) keys.forEach(k=>lines.push(`✅ ${MODS[k].t}：${lg[k].score||'完成'}`)); else lines.push('今天还没有练习');
+  const now=new Date(), lg=S.log[today()]||{};
+  const lines=[`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${L.title}`];
+  const keys=MODK.filter(k=>lg[k]);
+  if(keys.length) keys.forEach(k=>lines.push(`✅ ${tz('m_'+k)}：${scz(lg[k].score)||'完成'}`)); else lines.push('今天还没有练习');
   lines.push(`📚 已掌握：${nMastered()} / ${L.words.length} 个词`);
   const wc=L.write.filter(x=>S.written[x.c]).length; lines.push(`✍️ 会写：${wc} / ${L.write.length} 个字`);
   lines.push(`🔥 连续学习 ${S.days} 天　⭐ ${S.stars}`);
   const weak=L.words.filter(x=>S.w[x[0]].no>S.w[x[0]].ok && S.w[x[0]].no>0).map(x=>x[0]).slice(0,5);
   if(weak.length) lines.push(`🔁 还要多练：${weak.join('、')}`);
   const text=lines.join('\n');
-  app.innerHTML = header('今日汇报', L.sub) + `<div class="panel"><p class="small">复制下面的文字，发到群里 👇</p><textarea id="rt">${esc(text)}</textarea>
-    <div class="row2"><button class="btn b-gold" id="cp">📋 复制</button><button class="btn b-blue" onclick="home()">回到首页</button></div><div class="fb" id="fb"></div></div>`;
+  app.innerHTML = header(t('reportTitle'), L.sub) + `<div class="panel"><p class="small">${t('reportHint')}</p><textarea id="rt">${esc(text)}</textarea>
+    <div class="row2"><button class="btn b-gold" id="cp">${t('copy')}</button><button class="btn b-blue" onclick="home()">${t('home')}</button></div><div class="fb" id="fb"></div></div>`;
   document.getElementById('cp').onclick=()=>{
     const fb=document.getElementById('fb');
     const ta=document.getElementById('rt');
-    const done=()=>{ fb.className='fb ok'; fb.textContent='复制好了！去群里粘贴吧。'; };
-    try{ navigator.clipboard.writeText(text).then(done).catch(()=>{ ta.select(); fb.textContent='请长按文字，选择“复制”。'; }); }
-    catch(e){ ta.select(); fb.textContent='请长按文字，选择“复制”。'; }
+    const done=()=>{ fb.className='fb ok'; fb.textContent=t('copied'); };
+    try{ navigator.clipboard.writeText(text).then(done).catch(()=>{ ta.select(); fb.textContent=t('longPress'); }); }
+    catch(e){ ta.select(); fb.textContent=t('longPress'); }
   };
 }
-home();
+applyStatic(); home();
 </script>
 </body>
 </html>

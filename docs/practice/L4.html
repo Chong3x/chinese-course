@@ -15,6 +15,9 @@ button{font-family:inherit;cursor:pointer}
 header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
 header.top .t1{font-size:14px;color:var(--blue);font-weight:700;letter-spacing:1px}
 header.top h1{margin:2px 0 0;font-size:30px}
+header.top .tr{font-size:14px;color:var(--soft)}
+.lang{border:2px solid var(--line);border-radius:10px;padding:6px 8px;font-size:14px;background:#fff;color:var(--ink);font-family:inherit}
+.hright{display:flex;gap:8px;align-items:center}
 .back{border:none;background:var(--sky);color:var(--ink);border-radius:12px;padding:10px 14px;font-size:16px;font-weight:700}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
 .stat{background:var(--card);border-radius:16px;padding:14px;text-align:center}
@@ -77,7 +80,7 @@ textarea{width:100%;min-height:150px;font-size:16px;border-radius:12px;border:2p
 </style>
 </head>
 <body>
-<div style="max-width:760px;margin:0 auto;padding:12px 16px 0;display:flex;gap:14px;font-size:15px;font-weight:700"><a href="../lessons/L4.html" style="color:#17698F;text-decoration:none">← 回到课文</a><a href="../index.html" style="color:#17698F;text-decoration:none">课程首页</a></div><div class="wrap" id="app"></div>
+<div style="max-width:760px;margin:0 auto;padding:12px 16px 0;display:flex;gap:14px;font-size:15px;font-weight:700"><a href="../lessons/L4.html" style="color:#17698F;text-decoration:none" data-i="backLesson">← 回到课文</a><a href="../index.html" style="color:#17698F;text-decoration:none" data-i="courseHome">课程首页</a></div><div class="wrap" id="app"></div>
 <script>/**
  * Hanzi Writer v3.7.3 | https://chanind.github.io/hanzi-writer
  */
@@ -86,9 +89,20 @@ var HanziWriter=function(){"use strict";var t,e,r;const i="undefined"==typeof wi
 //# sourceMappingURL=hanzi-writer.min.js.map
 </script>
 <script>
-const L = {"id": "L4", "title": "第 4 课 · 我的好朋友", "sub": "课后练习 · HSK 2", "words": [["个子", "gèzi", "height (of a person)", "рост"], ["高", "gāo", "tall, high", "высокий"], ["长", "cháng", "long", "длинный"], ["眼睛", "yǎnjing", "eye", "глаза"], ["头", "tóu", "head", "голова"], ["手", "shǒu", "hand", "рука"], ["颜色", "yánsè", "color", "цвет"], ["红色", "hóngsè", "red", "красный"], ["白色", "báisè", "white", "белый"], ["黑色", "hēisè", "black", "чёрный"], ["绿色", "lǜsè", "green", "зелёный"], ["裤子", "kùzi", "trousers", "брюки"], ["笑", "xiào", "smile, laugh", "улыбаться, смеяться"], ["着", "zhe", "(ongoing state)", "(длительное состояние)"], ["男孩儿", "nánháir", "boy", "мальчик"], ["女孩儿", "nǚháir", "girl", "девочка"], ["小时候", "xiǎoshíhou", "in childhood", "в детстве"], ["从小", "cóngxiǎo", "since childhood", "с детства"], ["自己", "zìjǐ", "oneself", "сам, себя"], ["记得", "jìde", "remember", "помнить"]], "text_title": "我的好朋友", "text": [["阿依达", "我的好朋友叫丽娜。她{个子}很{高}，{眼睛}很大。"], ["阿依达", "她很喜欢{笑}，{笑}起来很漂亮。她最喜欢的{颜色}是{绿色}。"], ["阿依达", "今天她穿{着}{白色}的衣服和{黑色}的{裤子}，{手}里拿{着}一杯奶茶。"], ["阿依达", "我们{从小}就是好朋友。我还{记得}{小时候}，我们经常一起高兴地跳舞。"], ["阿依达", "她跳舞跳{得}很好，我跳{得}不好。但是她说：“没关系，我们一起跳！”"]], "narrative": true, "q": [["丽娜个子高吗？", "很高。"], ["她最喜欢什么颜色？", "绿色。"], ["今天她穿着什么？", "白色的衣服和黑色的裤子。"]], "fill": [["我哥哥___很高。", "个子"], ["她的___很大，很漂亮。", "眼睛"], ["你最喜欢什么___？", "颜色"], ["他手里拿___一本书。", "着"], ["这是我___画的画。", "自己"], ["你还___我吗？", "记得"]], "fill_bank": ["个子", "眼睛", "颜色", "着", "自己", "记得"], "order": [[["着", "他", "裤子", "穿", "黑色的"], "他穿着黑色的裤子。"], [["很长", "这条", "路"], "这条路很长。"], [["地", "高兴", "笑了", "她"], "她高兴地笑了。"], [["得", "跳舞", "跳", "很好", "她"], "她跳舞跳得很好。"]], "fix": [["他穿着了一件白色的衣服。", "他穿着一件白色的衣服。"], ["她很高兴得说。", "她很高兴地说。"], ["这是我妈妈地裤子。", "这是我妈妈的裤子。"], ["他跑地很快。", "他跑得很快。"]], "write": [{"c": "个", "py": "gè", "word": "个子"}, {"c": "子", "py": "zǐ", "word": "个子"}, {"c": "长", "py": "cháng", "word": "长"}, {"c": "男", "py": "nán", "word": "男孩儿"}, {"c": "女", "py": "nǚ", "word": "女孩儿"}, {"c": "小", "py": "xiǎo", "word": "小时候"}, {"c": "时", "py": "shí", "word": "小时候"}, {"c": "儿", "py": "ér", "word": "男孩儿"}]};
+const L = {"id": "L4", "title": "第 4 课 · 我的好朋友", "sub": "课后练习 · HSK 2", "words": [["个子", "gèzi", "height (of a person)", "рост"], ["高", "gāo", "tall, high", "высокий"], ["长", "cháng", "long", "длинный"], ["眼睛", "yǎnjing", "eye", "глаза"], ["头", "tóu", "head", "голова"], ["手", "shǒu", "hand", "рука"], ["颜色", "yánsè", "color", "цвет"], ["红色", "hóngsè", "red", "красный"], ["白色", "báisè", "white", "белый"], ["黑色", "hēisè", "black", "чёрный"], ["绿色", "lǜsè", "green", "зелёный"], ["裤子", "kùzi", "trousers", "брюки"], ["笑", "xiào", "smile, laugh", "улыбаться, смеяться"], ["着", "zhe", "(ongoing state)", "(длительное состояние)"], ["男孩儿", "nánháir", "boy", "мальчик"], ["女孩儿", "nǚháir", "girl", "девочка"], ["小时候", "xiǎoshíhou", "in childhood", "в детстве"], ["从小", "cóngxiǎo", "since childhood", "с детства"], ["自己", "zìjǐ", "oneself", "сам, себя"], ["记得", "jìde", "remember", "помнить"]], "text_title": "我的好朋友", "text": [["阿依达", "我的好朋友叫丽娜。她{个子}很{高}，{眼睛}很大。"], ["阿依达", "她很喜欢{笑}，{笑}起来很漂亮。她最喜欢的{颜色}是{绿色}。"], ["阿依达", "今天她穿{着}{白色}的衣服和{黑色}的{裤子}，{手}里拿{着}一杯奶茶。"], ["阿依达", "我们{从小}就是好朋友。我还{记得}{小时候}，我们经常一起高兴地跳舞。"], ["阿依达", "她跳舞跳{得}很好，我跳{得}不好。但是她说：“没关系，我们一起跳！”"]], "narrative": true, "q": [["丽娜个子高吗？", "很高。"], ["她最喜欢什么颜色？", "绿色。"], ["今天她穿着什么？", "白色的衣服和黑色的裤子。"]], "fill": [["我哥哥___很高。", "个子"], ["她的___很大，很漂亮。", "眼睛"], ["你最喜欢什么___？", "颜色"], ["他手里拿___一本书。", "着"], ["这是我___画的画。", "自己"], ["你还___我吗？", "记得"]], "fill_bank": ["个子", "眼睛", "颜色", "着", "自己", "记得"], "order": [[["着", "他", "裤子", "穿", "黑色的"], "他穿着黑色的裤子。"], [["很长", "这条", "路"], "这条路很长。"], [["地", "高兴", "笑了", "她"], "她高兴地笑了。"], [["得", "跳舞", "跳", "很好", "她"], "她跳舞跳得很好。"]], "fix": [["他穿着了一件白色的衣服。", "他穿着一件白色的衣服。"], ["她很高兴得说。", "她很高兴地说。"], ["这是我妈妈地裤子。", "这是我妈妈的裤子。"], ["他跑地很快。", "他跑得很快。"]], "write": [{"c": "个", "py": "gè", "word": "个子"}, {"c": "子", "py": "zǐ", "word": "个子"}, {"c": "长", "py": "cháng", "word": "长"}, {"c": "男", "py": "nán", "word": "男孩儿"}, {"c": "女", "py": "nǚ", "word": "女孩儿"}, {"c": "小", "py": "xiǎo", "word": "小时候"}, {"c": "时", "py": "shí", "word": "小时候"}, {"c": "儿", "py": "ér", "word": "男孩儿"}], "tr": {"zh": "我的好朋友", "kk": "Менің жақын құрбым", "en": "My best friend", "ru": "Моя лучшая подруга"}};
 const STROKES = {"个": {"strokes": ["M 519 700 Q 531 724 551 744 Q 560 750 558 760 Q 557 770 543 784 Q 507 815 475 811 Q 465 808 468 795 Q 486 692 300 485 Q 296 482 293 478 Q 241 423 110 316 Q 100 312 112 308 Q 178 317 306 429 Q 387 504 505 679 L 519 700 Z", "M 505 679 Q 614 538 756 391 Q 777 367 812 369 Q 933 373 971 381 Q 983 384 984 389 Q 984 395 967 402 Q 790 456 742 495 Q 639 579 519 700 C 498 721 487 703 505 679 Z", "M 472 486 Q 500 441 475 153 Q 474 143 472 131 Q 471 103 467 91 Q 454 37 508 -19 Q 509 -20 512 -22 Q 524 -23 529 -10 Q 535 8 536 92 Q 529 386 540 455 Q 541 468 535 474 Q 511 495 492 504 Q 479 508 470 500 Q 464 496 472 486 Z"], "medians": [[[478, 800], [498, 780], [507, 752], [477, 686], [415, 589], [320, 473], [269, 423], [198, 365], [116, 313]], [[522, 690], [521, 679], [623, 568], [726, 467], [780, 425], [822, 408], [976, 388]], [[479, 494], [490, 488], [511, 456], [500, 70], [515, -13]]], "radStrokes": [2]}, "子": {"strokes": ["M 544 561 Q 575 580 648 638 Q 679 666 700 671 Q 737 683 739 698 Q 740 708 705 746 Q 672 782 661 780 Q 657 783 644 778 Q 575 748 344 719 Q 323 720 309 722 Q 290 726 283 715 Q 280 708 288 697 Q 298 684 322 666 Q 343 650 354 650 Q 364 649 384 662 Q 420 690 607 732 Q 632 738 637 735 Q 643 731 642 723 Q 642 714 543 589 Q 534 580 529 573 C 509 550 519 545 544 561 Z", "M 529 573 Q 505 588 486 592 Q 474 596 466 591 Q 462 587 474 574 Q 495 544 508 451 L 513 407 Q 541 169 492 90 Q 489 83 482 81 Q 467 77 356 100 Q 349 100 346 97 Q 345 93 354 85 Q 429 30 470 -13 Q 483 -26 492 -24 Q 505 -23 527 -1 Q 575 44 576 136 Q 583 239 562 411 L 557 457 Q 551 505 549 542 Q 549 554 544 561 L 529 573 Z", "M 508 451 Q 499 452 299 429 Q 227 419 121 418 Q 108 418 106 406 Q 105 393 124 378 Q 142 365 174 353 Q 186 349 204 357 Q 222 363 297 375 Q 393 397 513 407 L 562 411 Q 769 430 888 417 Q 937 417 940 418 Q 940 421 942 421 Q 949 434 937 447 Q 864 513 800 491 Q 739 479 675 469 Q 605 463 557 457 L 508 451 Z"], "medians": [[[294, 711], [355, 686], [462, 717], [620, 752], [658, 752], [675, 732], [681, 708], [549, 578], [536, 574]], [[472, 588], [516, 549], [530, 478], [550, 263], [549, 179], [537, 99], [523, 64], [505, 42], [490, 34], [383, 79], [368, 91], [353, 93]], [[119, 405], [142, 394], [186, 386], [410, 420], [826, 459], [855, 457], [916, 439], [937, 422]]]}, "长": {"strokes": ["M 618 736 Q 625 717 616 700 Q 568 610 459 505 Q 449 496 445 491 Q 439 481 454 481 Q 464 481 493 499 Q 524 515 563 549 Q 606 582 654 634 Q 676 659 692 670 Q 702 679 700 693 Q 699 706 674 733 Q 650 755 632 758 Q 613 759 618 736 Z", "M 498 376 Q 502 377 510 378 Q 561 382 608 389 Q 737 407 869 395 Q 894 394 900 402 Q 907 417 894 428 Q 863 456 816 475 Q 801 481 775 472 Q 687 451 477 421 Q 444 417 417 413 L 368 406 Q 170 384 144 381 Q 129 381 128 369 Q 128 356 148 342 Q 166 329 199 318 Q 209 314 229 323 Q 266 338 367 354 L 416 364 Q 431 368 450 370 L 498 376 Z", "M 417 413 Q 423 683 431 705 Q 438 727 422 743 Q 395 764 365 771 Q 331 780 320 764 Q 311 751 327 736 Q 349 717 355 669 Q 368 593 368 406 L 367 354 Q 364 209 353 128 Q 349 77 327 49 Q 314 27 327 3 Q 343 -19 364 -27 Q 377 -34 390 -14 Q 409 23 519 149 Q 547 174 549 187 Q 550 194 544 196 Q 541 196 423 108 Q 410 95 407 113 Q 411 236 416 364 L 417 413 Z", "M 450 370 Q 505 325 588 217 Q 708 73 756 64 Q 757 65 760 64 Q 850 60 923 69 Q 962 73 958 83 Q 957 89 921 102 Q 747 159 702 188 Q 620 240 511 363 Q 504 370 498 376 C 477 397 427 390 450 370 Z"], "medians": [[[630, 744], [650, 716], [653, 688], [594, 612], [543, 560], [479, 504], [453, 489]], [[141, 368], [207, 352], [427, 391], [793, 438], [823, 434], [888, 411]], [[336, 754], [374, 732], [389, 714], [395, 427], [379, 117], [387, 64], [404, 67], [436, 87], [545, 191]], [[456, 369], [491, 357], [630, 206], [727, 129], [770, 108], [952, 82]]]}, "男": {"strokes": ["M 305 750 Q 284 760 263 764 Q 256 765 251 760 Q 244 753 254 742 Q 296 687 317 544 Q 326 474 367 455 Q 383 452 384 475 L 381 506 Q 347 651 340 710 C 337 736 332 738 305 750 Z", "M 655 507 Q 655 501 657 494 Q 661 476 676 476 Q 692 477 701 494 Q 719 515 752 621 Q 774 679 817 711 Q 839 727 821 746 Q 802 767 747 799 Q 732 809 658 796 Q 541 787 436 767 Q 357 754 305 750 C 275 747 312 700 340 710 Q 362 722 475 736 L 513 741 Q 679 765 709 750 Q 721 741 712 703 Q 675 561 661 533 Q 660 533 660 532 C 653 515 653 515 655 507 Z", "M 537 618 Q 580 625 619 631 Q 640 634 633 645 Q 623 658 601 663 Q 580 666 543 657 Q 540 657 539 655 C 534 653 518 650 489 643 Q 444 633 403 623 Q 388 620 406 607 Q 416 600 438 602 Q 463 606 490 610 L 537 618 Z", "M 539 655 Q 540 665 541 676 Q 541 686 542 693 Q 549 709 540 719 Q 527 732 513 741 C 488 758 460 762 475 736 Q 479 729 483 722 Q 486 715 489 643 L 490 610 Q 490 576 492 523 C 493 493 532 501 533 531 Q 534 577 537 618 L 539 655 Z", "M 384 475 Q 388 474 396 475 Q 478 494 655 507 C 685 509 686 516 660 532 Q 627 557 537 532 Q 534 532 533 531 L 492 523 Q 432 513 381 506 C 351 502 354 476 384 475 Z", "M 501 330 Q 592 349 672 356 Q 708 359 714 347 Q 726 326 712 277 Q 681 136 641 78 Q 622 48 594 55 Q 563 68 535 84 Q 511 94 526 68 Q 575 16 596 -23 Q 618 -50 641 -29 Q 678 -7 706 39 Q 737 91 767 256 Q 777 314 800 342 Q 815 355 809 368 Q 799 381 742 411 Q 720 421 697 408 Q 658 389 514 364 L 446 352 Q 335 337 240 336 Q 218 336 214 325 Q 211 315 240 300 Q 268 279 294 287 Q 367 305 436 318 L 501 330 Z", "M 436 318 Q 364 114 189 45 Q 171 38 155 28 Q 140 21 152 16 Q 167 13 204 21 Q 262 34 310 65 Q 356 92 408 153 Q 463 238 479 274 Q 479 283 501 330 L 514 364 Q 523 386 538 405 Q 551 421 536 434 Q 494 479 466 475 Q 451 474 455 457 Q 467 415 446 352 L 436 318 Z"], "medians": [[[260, 752], [291, 729], [311, 698], [348, 524], [369, 470]], [[311, 747], [346, 734], [618, 774], [711, 778], [732, 771], [765, 730], [742, 683], [676, 495]], [[404, 615], [431, 615], [594, 646], [624, 641]], [[482, 735], [507, 717], [514, 700], [513, 554], [497, 532]], [[390, 483], [403, 494], [572, 521], [651, 527]], [[224, 323], [283, 311], [694, 381], [722, 383], [736, 375], [757, 354], [750, 308], [705, 128], [670, 52], [642, 23], [622, 14], [592, 29], [527, 78]], [[466, 463], [482, 448], [498, 417], [452, 282], [393, 175], [332, 108], [293, 78], [232, 46], [157, 21]]], "radStrokes": [0, 1, 2, 3, 4]}, "女": {"strokes": ["M 445 467 Q 485 576 514 665 Q 526 705 540 732 Q 562 757 524 789 Q 478 825 449 826 Q 433 827 429 815 Q 425 806 434 798 Q 455 774 453 731 Q 441 625 390 461 L 375 416 Q 348 338 337 327 Q 313 309 331 280 Q 340 270 356 274 Q 393 283 491 221 L 535 192 Q 637 132 757 11 Q 776 -8 789 -7 Q 805 -6 805 17 Q 804 54 773 100 Q 755 127 701 153 Q 599 213 569 230 L 519 256 Q 395 320 393 327 Q 393 333 427 423 L 445 467 Z", "M 695 496 Q 656 544 628 541 Q 612 540 614 522 Q 618 504 617 486 L 606 440 Q 566 319 519 256 L 491 221 Q 406 128 277 81 Q 256 74 237 65 Q 221 59 233 53 Q 248 49 289 53 Q 356 63 413 95 Q 473 122 535 192 L 569 230 Q 600 275 659 395 Q 669 423 688 447 C 705 472 710 479 695 496 Z", "M 688 447 Q 757 456 931 443 Q 956 440 962 449 Q 969 462 957 475 Q 926 503 881 524 Q 866 531 839 522 Q 767 507 695 496 L 617 486 Q 461 471 445 467 L 390 461 Q 314 454 268 447 Q 189 435 73 434 Q 60 434 57 422 Q 57 409 76 394 Q 94 381 126 369 Q 138 365 156 373 Q 205 392 375 416 L 427 423 Q 448 426 606 440 L 688 447 Z"], "medians": [[[442, 810], [475, 787], [498, 746], [453, 573], [373, 346], [365, 309], [498, 244], [675, 132], [740, 81], [787, 11]], [[628, 527], [652, 492], [651, 462], [587, 314], [549, 249], [520, 214], [452, 148], [384, 105], [321, 78], [238, 58]], [[70, 420], [138, 402], [383, 440], [857, 487], [913, 474], [950, 458]]]}, "小": {"strokes": ["M 499 695 Q 503 661 501 132 Q 500 110 488 101 Q 478 92 448 100 Q 414 107 383 113 Q 347 123 351 112 Q 352 105 375 91 Q 456 42 479 10 Q 504 -26 523 -25 Q 538 -26 552 11 Q 568 57 564 133 Q 531 583 572 723 Q 590 754 532 778 Q 498 797 477 789 Q 459 782 475 759 Q 497 731 499 695 Z", "M 266 475 Q 223 408 170 349 Q 160 339 155 320 Q 148 292 154 273 Q 158 251 185 261 Q 213 274 237 308 Q 273 357 284 404 Q 297 441 293 470 Q 289 480 283 484 Q 273 484 266 475 Z", "M 706 472 Q 769 411 842 323 Q 860 299 878 293 Q 888 292 897 303 Q 913 318 900 370 Q 887 431 709 508 Q 699 515 696 500 Q 695 484 706 472 Z"], "medians": [[[484, 773], [501, 765], [533, 730], [525, 545], [532, 191], [528, 90], [510, 54], [459, 68], [358, 112]], [[280, 476], [254, 405], [170, 274]], [[709, 494], [800, 425], [848, 380], [866, 353], [879, 311]]]}, "时": {"strokes": ["M 196 672 Q 178 690 156 696 Q 146 700 134 697 Q 127 691 133 679 Q 151 601 153 597 Q 153 593 154 585 Q 166 378 135 256 Q 120 201 157 154 Q 167 141 179 153 Q 189 169 191 187 L 195 221 Q 196 243 196 275 Q 197 357 198 419 L 199 450 Q 202 618 204 632 Q 205 639 205 645 C 206 663 206 663 196 672 Z", "M 308 198 Q 318 182 330 165 Q 346 141 353 144 Q 365 147 379 180 Q 389 208 385 326 Q 370 617 392 654 Q 402 672 394 683 Q 387 693 338 708 Q 316 717 298 707 Q 243 682 196 672 C 167 665 176 639 205 645 Q 308 666 311 666 Q 314 666 318 662 Q 331 649 332 594 Q 336 371 327 248 Q 330 229 315 227 C 300 210 300 210 308 198 Z", "M 198 419 Q 252 432 294 440 Q 315 446 306 457 Q 294 470 270 471 Q 224 474 199 450 C 177 430 169 412 198 419 Z", "M 191 187 Q 198 196 308 198 C 338 199 338 207 315 227 Q 311 231 304 235 Q 288 244 195 221 C 166 214 165 172 191 187 Z", "M 749 536 Q 833 548 918 561 Q 921 564 924 567 Q 925 580 901 592 Q 859 616 772 590 Q 760 587 750 584 L 700 573 Q 699 574 697 573 Q 661 567 425 535 Q 394 532 418 512 Q 454 482 485 490 Q 579 509 700 529 L 749 536 Z", "M 700 529 Q 701 381 702 118 Q 701 93 688 84 Q 682 80 601 93 Q 568 103 571 93 Q 572 86 594 72 Q 664 24 683 -5 Q 705 -39 721 -38 Q 736 -39 749 -4 Q 765 42 761 114 Q 746 325 749 536 L 750 584 Q 750 701 767 757 Q 783 788 728 809 Q 694 828 675 820 Q 657 813 674 791 Q 696 764 697 730 Q 698 712 700 573 L 700 529 Z", "M 483 348 Q 513 318 543 283 Q 556 270 572 268 Q 582 268 589 281 Q 595 296 588 326 Q 582 360 482 396 Q 466 400 460 399 Q 454 395 455 382 Q 458 372 483 348 Z"], "medians": [[[141, 689], [170, 652], [178, 600], [180, 464], [163, 228], [168, 160]], [[204, 667], [221, 662], [318, 689], [357, 664], [360, 338], [355, 225], [348, 201], [352, 155]], [[204, 427], [216, 441], [235, 449], [297, 451]], [[196, 194], [212, 211], [303, 222]], [[419, 524], [475, 515], [835, 576], [888, 577], [916, 569]], [[681, 805], [710, 787], [730, 762], [723, 587], [731, 104], [726, 73], [710, 40], [578, 91]], [[464, 392], [552, 324], [571, 286]]], "radStrokes": [0, 1, 2, 3]}, "儿": {"strokes": ["M 310 637 Q 340 577 311 357 Q 299 300 269 232 Q 236 163 146 80 Q 130 67 125 59 Q 122 50 136 50 Q 178 50 258 125 Q 354 224 386 446 Q 395 524 405 602 Q 412 627 389 639 Q 334 669 315 667 Q 293 663 310 637 Z", "M 979 84 Q 954 144 939 247 Q 936 265 930 272 Q 920 279 916 262 Q 903 201 887 155 Q 880 124 852 105 Q 825 78 707 87 Q 641 96 622 132 Q 595 201 620 515 Q 627 621 641 666 Q 653 697 566 747 Q 547 760 526 749 Q 513 742 536 711 Q 564 671 565 570 Q 565 489 557 329 Q 542 128 591 71 Q 630 32 708 20 Q 753 16 816 16 Q 895 17 953 42 Q 993 54 979 84 Z"], "medians": [[[317, 651], [326, 648], [363, 606], [351, 422], [330, 317], [293, 219], [259, 165], [191, 94], [134, 59]], [[535, 738], [564, 719], [598, 671], [580, 233], [590, 142], [613, 93], [659, 65], [704, 53], [744, 51], [839, 55], [905, 80], [917, 89], [922, 130], [925, 264]]]}};
 const AUDIO = {};
+const T = {"back": {"zh": "← 返回", "kk": "← Артқа", "en": "← Back", "ru": "← Назад"}, "backLesson": {"zh": "← 回到课文", "kk": "← Мәтінге қайту", "en": "← Back to lesson", "ru": "← К уроку"}, "courseHome": {"zh": "课程首页", "kk": "Басты бет", "en": "Course home", "ru": "Главная"}, "mastered": {"zh": "已掌握的词", "kk": "Меңгерілген сөздер", "en": "Words mastered", "ru": "Выучено слов"}, "stars": {"zh": "星星", "kk": "Жұлдыздар", "en": "Stars", "ru": "Звёзды"}, "streak": {"zh": "连续学习天数", "kk": "Қатарынан күн", "en": "Day streak", "ru": "Дней подряд"}, "todayTask": {"zh": "今日任务", "kk": "Бүгінгі тапсырма", "en": "Today's task", "ru": "Задание на сегодня"}, "classDay": {"zh": "上课日", "kk": "Сабақ күні", "en": "Class day", "ru": "День урока"}, "wd": {"zh": ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], "kk": ["Жексенбі", "Дүйсенбі", "Сейсенбі", "Сәрсенбі", "Бейсенбі", "Жұма", "Сенбі"], "en": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "ru": ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]}, "p0t": {"zh": "休息日 😊", "kk": "Демалыс күні 😊", "en": "Rest day 😊", "ru": "Выходной 😊"}, "p0d": {"zh": "今天休息！想玩的话，可以做一轮“记新词”。休息不会断掉连续天数。", "kk": "Бүгін демал! Қаласаң, «Жаңа сөздер» жаттығуын бір рет жаса. Демалыс күні қатарынан күндер саны үзілмейді.", "en": "Take a break today! If you like, do one round of “New words”. A rest day won't break your streak.", "ru": "Сегодня отдыхаем! Если хочешь, пройди один раунд «Новых слов». Выходной не прерывает серию дней."}, "p1t": {"zh": "上课日：复习 5 分钟", "kk": "Сабақ күні: 5 минут қайталау", "en": "Class day: 5-minute review", "ru": "День урока: повторение 5 минут"}, "p1d": {"zh": "上课前过一遍“记新词”，上课会更轻松。", "kk": "Сабақ алдында «Жаңа сөздерді» бір рет қайтала — сабақ жеңілірек өтеді.", "en": "Go through “New words” once before class — class will feel easier.", "ru": "Перед уроком пройди «Новые слова» — на уроке будет легче."}, "p2t": {"zh": "记新词 + 听一听", "kk": "Жаңа сөздер + Тыңда", "en": "New words + Listen", "ru": "Новые слова + Аудирование"}, "p2d": {"zh": "今天把本课的生词过一遍，再听音选汉字。大约 15 分钟。", "kk": "Бүгін сабақтың жаңа сөздерін қайтала, содан кейін тыңдап, иероглифті таңда. Шамамен 15 минут.", "en": "Go through this lesson's new words, then listen and pick the characters. About 15 minutes.", "ru": "Повтори новые слова урока, затем слушай и выбирай иероглифы. Около 15 минут."}, "p4t": {"zh": "认一认 + 读一读", "kk": "Таны + Оқы", "en": "Recognize + Read", "ru": "Узнай + Читай"}, "p4d": {"zh": "看汉字选意思，再读课文三遍。大约 15 分钟。", "kk": "Иероглифке қарап мағынасын таңда, содан кейін мәтінді үш рет оқы. Шамамен 15 минут.", "en": "Look at the characters and pick the meaning, then read the text three times. About 15 minutes.", "ru": "Смотри на иероглифы и выбирай значение, потом прочитай текст три раза. Около 15 минут."}, "p5t": {"zh": "写一写 + 练一练", "kk": "Жаз + Жаттық", "en": "Write + Practice", "ru": "Пиши + Практика"}, "p5d": {"zh": "写本课的汉字，再做作业题。大约 20 分钟。", "kk": "Сабақтың иероглифтерін жаз, содан кейін үй тапсырмасын орында. Шамамен 20 минут.", "en": "Write this lesson's characters, then do the homework exercises. About 20 minutes.", "ru": "Напиши иероглифы урока, затем сделай домашние задания. Около 20 минут."}, "p6t": {"zh": "周末小测", "kk": "Апта соңындағы шағын тест", "en": "Weekend quiz", "ru": "Тест выходного дня"}, "p6d": {"zh": "15 道题，看看这周学得怎么样！", "kk": "15 сұрақ — осы аптада не үйренгеніңді тексер!", "en": "15 questions — see what you learned this week!", "ru": "15 вопросов — проверь себя за эту неделю!"}, "m_cards": {"zh": "记新词", "kk": "Жаңа сөздер", "en": "New words", "ru": "Новые слова"}, "s_cards": {"zh": "看汉字，说意思", "kk": "Иероглифке қарап, мағынасын айт", "en": "See the character, say the meaning", "ru": "Смотри на иероглиф, называй значение"}, "m_listen": {"zh": "听一听", "kk": "Тыңда", "en": "Listen", "ru": "Аудирование"}, "s_listen": {"zh": "听发音，选汉字", "kk": "Тыңдап, иероглифті таңда", "en": "Listen and choose the character", "ru": "Слушай и выбирай иероглиф"}, "m_recog": {"zh": "认一认", "kk": "Таны", "en": "Recognize", "ru": "Узнай"}, "s_recog": {"zh": "看汉字，选意思", "kk": "Иероглифке қарап, мағынасын таңда", "en": "See the character, choose the meaning", "ru": "Смотри на иероглиф, выбирай значение"}, "m_read": {"zh": "读一读", "kk": "Оқы", "en": "Read", "ru": "Читай"}, "s_read": {"zh": "读课文，回答问题", "kk": "Мәтінді оқып, сұрақтарға жауап бер", "en": "Read the text, answer questions", "ru": "Читай текст, отвечай на вопросы"}, "m_write": {"zh": "写一写", "kk": "Жаз", "en": "Write", "ru": "Пиши"}, "s_write": {"zh": "学写本课的字", "kk": "Сабақтың иероглифтерін жазуды үйрен", "en": "Learn to write this lesson's characters", "ru": "Учись писать иероглифы урока"}, "m_hw": {"zh": "练一练", "kk": "Жаттық", "en": "Practice", "ru": "Практика"}, "s_hw": {"zh": "填空、排词、找错", "kk": "Бос орын, сөз тәртібі, қатені тап", "en": "Fill in, word order, find the mistake", "ru": "Пропуски, порядок слов, найди ошибку"}, "m_quiz": {"zh": "周末小测", "kk": "Шағын тест", "en": "Weekend quiz", "ru": "Тест"}, "s_quiz": {"zh": "15 道综合题", "kk": "15 аралас сұрақ", "en": "15 mixed questions", "ru": "15 разных вопросов"}, "reportBtn": {"zh": "📋 生成今日汇报，发到群里", "kk": "📋 Бүгінгі есепті жасап, топқа жібер", "en": "📋 Make today's report for the group chat", "ru": "📋 Создать отчёт за сегодня для группы"}, "note": {"zh": "一个词连续答对 {n} 次，就算“掌握”。进度只保存在这台设备的浏览器里，请用同一台设备练习。", "kk": "Сөзге қатарынан {n} рет дұрыс жауап берсең, ол «меңгерілген» болып саналады. Нәтиже тек осы құрылғының браузерінде сақталады, сондықтан бір құрылғыда жаттық.", "en": "A word counts as “mastered” after {n} correct answers in a row. Progress is saved only in this device's browser, so practise on the same device.", "ru": "Слово считается «выученным» после {n} правильных ответов подряд. Прогресс сохраняется только в браузере этого устройства, поэтому занимайся на одном устройстве."}, "noVoice": {"zh": "这台设备没有中文语音，听力题会用拼音代替。", "kk": "Бұл құрылғыда қытайша дыбыс жоқ, сондықтан тыңдау сұрақтарының орнына пиньинь көрсетіледі.", "en": "This device has no Chinese voice, so listening questions will show pinyin instead.", "ru": "На этом устройстве нет китайского голоса, поэтому в аудировании будет показан пиньинь."}, "todayDone": {"zh": "今天 ✓", "kk": "Бүгін ✓", "en": "Today ✓", "ru": "Сегодня ✓"}, "finish": {"zh": "太好了！完成了！", "kk": "Керемет! Аяқтадың!", "en": "Great! Done!", "ru": "Отлично! Готово!"}, "gotStars": {"zh": "得到", "kk": "Алдың", "en": "Earned", "ru": "Получено"}, "masteredN": {"zh": "已掌握 {a}/{b} 个词", "kk": "Меңгерілді: {a}/{b} сөз", "en": "Mastered: {a}/{b} words", "ru": "Выучено: {a}/{b} слов"}, "again": {"zh": "再来一轮", "kk": "Тағы бір рет", "en": "One more round", "ru": "Ещё раунд"}, "home": {"zh": "回到首页", "kk": "Басты бетке", "en": "Back to home", "ru": "На главную"}, "cardsLeft": {"zh": "还剩 {n} 张", "kk": "{n} карточка қалды", "en": "{n} cards left", "ru": "Осталось карточек: {n}"}, "cardsHint": {"zh": "先自己说出拼音和意思，再看答案。", "kk": "Алдымен пиньинь мен мағынасын өзің айт, содан кейін жауапты қара.", "en": "First say the pinyin and meaning yourself, then check the answer.", "ru": "Сначала назови пиньинь и значение, потом посмотри ответ."}, "show": {"zh": "看答案", "kk": "Жауапты көру", "en": "Show answer", "ru": "Показать ответ"}, "notYet": {"zh": "还不熟 ✗", "kk": "Әлі білмеймін ✗", "en": "Not yet ✗", "ru": "Пока не знаю ✗"}, "know": {"zh": "我认识 ✓", "kk": "Білемін ✓", "en": "I know it ✓", "ru": "Знаю ✓"}, "retry": {"zh": "🔁 再试一次", "kk": "🔁 Тағы бір рет", "en": "🔁 Try again", "ru": "🔁 Ещё раз"}, "qnum": {"zh": "第 {i} / {n} 题", "kk": "{i}/{n} сұрақ", "en": "Question {i} of {n}", "ru": "Вопрос {i} из {n}"}, "right": {"zh": "对了！👍", "kk": "Дұрыс! 👍", "en": "Correct! 👍", "ru": "Правильно! 👍"}, "wrong": {"zh": "不对，看看正确答案。", "kk": "Қате, дұрыс жауапты қара.", "en": "Not quite — look at the correct answer.", "ru": "Неверно, посмотри правильный ответ."}, "listenQ": {"zh": "听一听，选出你听到的词", "kk": "Тыңда да, естіген сөзіңді таңда", "en": "Listen and choose the word you hear", "ru": "Слушай и выбери услышанное слово"}, "noVoiceQ": {"zh": "（这台设备没有中文语音）看拼音，选汉字", "kk": "(Қытайша дыбыс жоқ) Пиньиньге қарап, иероглифті таңда", "en": "(No Chinese voice) Read the pinyin and choose the character", "ru": "(Нет китайского голоса) Смотри на пиньинь и выбери иероглиф"}, "h2m": {"zh": "这个词是什么意思？", "kk": "Бұл сөздің мағынасы қандай?", "en": "What does this word mean?", "ru": "Что значит это слово?"}, "m2h": {"zh": "哪个词是这个意思？", "kk": "Қай сөздің мағынасы осындай?", "en": "Which word has this meaning?", "ru": "Какое слово имеет это значение?"}, "readHint": {"zh": "先自己读，不会的词点一下看拼音，点 🔊 听一句。读完一遍按下面的按钮。", "kk": "Алдымен өзің оқы. Білмейтін сөзді бассаң, пиньинь шығады; 🔊 басып, сөйлемді тыңда. Бір рет оқып болған соң, төмендегі батырманы бас.", "en": "Read it yourself first. Tap a word you don't know to see its pinyin, tap 🔊 to hear the sentence. After each read-through, press the button below.", "ru": "Сначала прочитай сам. Нажми на незнакомое слово — появится пиньинь, нажми 🔊 — услышишь предложение. Прочитав текст, нажми кнопку ниже."}, "readOnce": {"zh": "我读完了一遍（{n}/3）", "kk": "Бір рет оқыдым ({n}/3)", "en": "I read it once ({n}/3)", "ru": "Прочитано раз: {n}/3"}, "toQs": {"zh": "回答问题 →", "kk": "Сұрақтарға жауап беру →", "en": "Answer questions →", "ru": "Ответить на вопросы →"}, "textQ": {"zh": "课文问题", "kk": "Мәтін бойынша сұрақ", "en": "Question about the text", "ru": "Вопрос по тексту"}, "writeHint": {"zh": "这些是官方 HSK 要求会写的字。先看笔顺，再自己写（手指或鼠标）。", "kk": "Бұл — HSK бойынша жазуды білу керек ресми иероглифтер. Алдымен жазылу ретін қара, содан кейін өзің жаз (саусақпен немесе тінтуірмен).", "en": "These are characters the official HSK requires you to write. Watch the stroke order, then write it yourself (finger or mouse).", "ru": "Эти иероглифы по официальной программе HSK нужно уметь писать. Сначала посмотри порядок черт, потом попробуй написать (пальцем или мышкой)."}, "inWord": {"zh": "在“{w}”里", "kk": "«{w}» сөзінде", "en": "in “{w}”", "ru": "в слове «{w}»"}, "anim": {"zh": "看笔顺 ▶", "kk": "Жазылу реті ▶", "en": "Stroke order ▶", "ru": "Порядок черт ▶"}, "myTurn": {"zh": "我来写 ✍️", "kk": "Мен жазамын ✍️", "en": "My turn ✍️", "ru": "Я пишу ✍️"}, "canWrite": {"zh": "已经会写 {a} / {b} 个字", "kk": "Жаза аласың: {a}/{b} иероглиф", "en": "You can write {a} of {b} characters", "ru": "Умею писать: {a} из {b}"}, "strokeGo": {"zh": "按笔顺一笔一笔写。", "kk": "Жазылу ретімен сызықты бір-бірлеп жаз.", "en": "Write stroke by stroke, in order.", "ru": "Пиши черту за чертой по порядку."}, "round2": {"zh": "很好！现在不看灰色的字，自己再写一遍。", "kk": "Жақсы! Енді сұр иероглифке қарамай, тағы бір рет жаз.", "en": "Good! Now write it again without the grey outline.", "ru": "Хорошо! Теперь напиши ещё раз без серой подсказки."}, "wroteOk": {"zh": "太棒了！你会写“{c}”了！⭐", "kk": "Керемет! Сен «{c}» иероглифін жаза аласың! ⭐", "en": "Awesome! You can write “{c}” now! ⭐", "ru": "Отлично! Теперь ты умеешь писать «{c}»! ⭐"}, "wroteNo": {"zh": "有点难，再写一次吧！", "kk": "Сәл қиын екен, тағы бір рет жазып көр!", "en": "A bit tricky — try once more!", "ru": "Немного сложно — попробуй ещё раз!"}, "noStroke": {"zh": "这台设备不能显示笔顺，请在纸上写 5 遍。", "kk": "Бұл құрылғы жазылу ретін көрсете алмайды, қағазға 5 рет жаз.", "en": "This device can't show stroke order — write it 5 times on paper.", "ru": "Это устройство не показывает порядок черт — напиши 5 раз на бумаге."}, "fillQ": {"zh": "选词填空", "kk": "Бос орынға сөз таңда", "en": "Choose the word for the blank", "ru": "Выбери слово для пропуска"}, "fixQ": {"zh": "哪一句是对的？", "kk": "Қай сөйлем дұрыс?", "en": "Which sentence is correct?", "ru": "Какое предложение правильное?"}, "orderQ": {"zh": "按顺序点词语，组成一句话", "kk": "Сөздерді ретімен басып, сөйлем құра", "en": "Tap the words in order to make a sentence", "ru": "Нажимай слова по порядку, чтобы составить предложение"}, "clear": {"zh": "重来", "kk": "Қайтадан", "en": "Reset", "ru": "Сначала"}, "check": {"zh": "检查", "kk": "Тексеру", "en": "Check", "ru": "Проверить"}, "wrongAns": {"zh": "不对。正确答案：", "kk": "Қате. Дұрыс жауап: ", "en": "Not quite. Correct answer: ", "ru": "Неверно. Правильный ответ: "}, "quizListen": {"zh": "听一听，选汉字", "kk": "Тыңда да, иероглифті таңда", "en": "Listen and choose the character", "ru": "Слушай и выбери иероглиф"}, "reportTitle": {"zh": "今日汇报", "kk": "Бүгінгі есеп", "en": "Today's report", "ru": "Отчёт за сегодня"}, "reportHint": {"zh": "复制下面的文字，发到群里 👇", "kk": "Төмендегі мәтінді көшіріп, топқа жібер 👇", "en": "Copy the text below and send it to the group 👇", "ru": "Скопируй текст ниже и отправь в группу 👇"}, "copy": {"zh": "📋 复制", "kk": "📋 Көшіру", "en": "📋 Copy", "ru": "📋 Копировать"}, "copied": {"zh": "复制好了！去群里粘贴吧。", "kk": "Көшірілді! Енді топқа қой.", "en": "Copied! Now paste it in the group.", "ru": "Скопировано! Вставь в группу."}, "longPress": {"zh": "请长按文字，选择“复制”。", "kk": "Мәтінді басып тұрып, «Көшіру» таңда.", "en": "Press and hold the text, then choose “Copy”.", "ru": "Нажми и удерживай текст, затем выбери «Копировать»."}, "sc_cards": {"zh": "认识 {a}/{b}", "kk": "Білемін {a}/{b}", "en": "Knew {a}/{b}", "ru": "Знаю {a}/{b}"}, "sc_first": {"zh": "第一次就答对 {a}/{b}", "kk": "Бірінші реттен дұрыс: {a}/{b}", "en": "Right first time: {a}/{b}", "ru": "С первого раза: {a}/{b}"}, "sc_hw": {"zh": "答对 {a}/{b}", "kk": "Дұрыс: {a}/{b}", "en": "Correct: {a}/{b}", "ru": "Верно: {a}/{b}"}, "sc_write": {"zh": "会写 {a}/{b}", "kk": "Жаза алады: {a}/{b}", "en": "Can write {a}/{b}", "ru": "Умею писать: {a}/{b}"}};
+const LANGS = [["zh", "中文"], ["kk", "Қазақша"], ["en", "English"], ["ru", "Русский"]];
+let LANG = 'zh'; try{ LANG = localStorage.getItem('ui-lang') || 'zh'; }catch(e){}
+if(!T.back[LANG]) LANG='zh';
+function t(k, v){ let s=(T[k]||{})[LANG]; if(s===undefined) s=(T[k]||{}).zh||k; if(v) for(const x in v) s=String(s).split('{'+x+'}').join(v[x]); return s; }
+function tz(k, v){ const keep=LANG; LANG='zh'; const s=t(k,v); LANG=keep; return s; }
+function setLang(l){ LANG=l; try{ localStorage.setItem('ui-lang', l); }catch(e){} applyStatic(); home(); }
+function applyStatic(){ document.querySelectorAll('[data-i]').forEach(el=>el.textContent=t(el.dataset.i)); }
+function langSel(){ return `<select class="lang" onchange="setLang(this.value)">${LANGS.map(([k,n])=>`<option value="${k}" ${k===LANG?'selected':''}>${n}</option>`).join('')}</select>`; }
+function sc(x){ if(!x) return ''; if(typeof x==='string') return x; return t('sc_'+x[0],{a:x[1],b:x[2]}); }
+function scz(x){ if(!x) return ''; if(typeof x==='string') return x; return tz('sc_'+x[0],{a:x[1],b:x[2]}); }
 const KEY = 'hsk-practice-' + L.id;
 let S = load();
 function load(){
@@ -142,49 +156,36 @@ function speak(text){
 
 // ---------- 页面 ----------
 const app=document.getElementById('app');
-function header(title, sub, back=true){
-  return `<header class="top"><div><div class="t1">${esc(sub)}</div><h1 class="fun">${esc(title)}</h1></div>${back?'<button class="back" onclick="home()">← 返回</button>':''}</header>`;
+function header(title, sub, back=true, tr=''){
+  return `<header class="top"><div><div class="t1">${esc(sub)}</div><h1 class="fun">${esc(title)}</h1>${tr?`<div class="tr">${esc(tr)}</div>`:''}</div><div class="hright">${back?`<button class="back" onclick="home()">${t('back')}</button>`:langSel()}</div></header>`;
 }
-const PLAN = {
-  0:{k:'周日',t:'休息日 😊',d:'今天休息！想玩的话，可以做一轮“记新词”。休息不会断掉连续天数。',m:['cards']},
-  1:{k:'周一 · 上课日',t:'上课日：复习 5 分钟',d:'上课前过一遍“记新词”，上课会更轻松。',m:['cards']},
-  2:{k:'周二',t:'记新词 + 听一听',d:'今天把本课的生词过一遍，再听音选汉字。大约 15 分钟。',m:['cards','listen']},
-  3:{k:'周三 · 上课日',t:'上课日：复习 5 分钟',d:'上课前过一遍“记新词”。',m:['cards']},
-  4:{k:'周四',t:'认一认 + 读一读',d:'看汉字选意思，再读课文三遍。大约 15 分钟。',m:['recog','read']},
-  5:{k:'周五',t:'写一写 + 练一练',d:'写本课的汉字，再做作业题。大约 20 分钟。',m:['write','hw']},
-  6:{k:'周六',t:'周末小测',d:'15 道题，看看这周学得怎么样！',m:['quiz']},
-};
-const MODS = {
-  cards:{ic:'🃏',t:'记新词',s:'看汉字，说意思'},
-  listen:{ic:'👂',t:'听一听',s:'听发音，选汉字'},
-  recog:{ic:'👀',t:'认一认',s:'看汉字，选意思'},
-  read:{ic:'📖',t:'读一读',s:'读课文，回答问题'},
-  write:{ic:'✍️',t:'写一写',s:'学写本课的字'},
-  hw:{ic:'📝',t:'练一练',s:'填空、排词、找错'},
-  quiz:{ic:'🏆',t:'周末小测',s:'15 道综合题'},
-};
+const PLANS = {0:['p0',['cards']],1:['p1',['cards']],2:['p2',['cards','listen']],3:['p1',['cards']],4:['p4',['recog','read']],5:['p5',['write','hw']],6:['p6',['quiz']]};
+const MODK = ['cards','listen','recog','read','write','hw','quiz'];
+const ICON = {cards:'🃏',listen:'👂',recog:'👀',read:'📖',write:'✍️',hw:'📝',quiz:'🏆'};
+function mt(k){ return t('m_'+k); }
 function home(){
   const n=nMastered(), tot=L.words.length, p=Math.round(n/tot*100);
-  const plan=PLAN[new Date().getDay()]; const lg=S.log[today()]||{};
-  app.innerHTML = header(L.title, L.sub, false) + `
+  const d=new Date().getDay(); const pl=PLANS[d]; const lg=S.log[today()]||{};
+  const k=t('wd')[d]+((d===1||d===3)?' · '+t('classDay'):'');
+  app.innerHTML = header(L.title, L.sub, false, (L.tr||{})[LANG]&&LANG!=='zh'?L.tr[LANG]:'') + `
   <div class="stats">
-    <div class="stat"><b>${n}/${tot}</b><span>已掌握的词</span><div class="bar"><i style="width:${p}%"></i></div></div>
-    <div class="stat"><b>⭐ ${S.stars}</b><span>星星</span></div>
-    <div class="stat"><b>🔥 ${S.days}</b><span>连续学习天数</span></div>
+    <div class="stat"><b>${n}/${tot}</b><span>${t('mastered')}</span><div class="bar"><i style="width:${p}%"></i></div></div>
+    <div class="stat"><b>⭐ ${S.stars}</b><span>${t('stars')}</span></div>
+    <div class="stat"><b>🔥 ${S.days}</b><span>${t('streak')}</span></div>
   </div>
-  <div class="today"><div class="k">今日任务 · ${plan.k}</div><h2 class="fun">${plan.t}</h2><p>${plan.d}</p>
-    <div class="go">${plan.m.map(m=>`<button onclick="openMod('${m}')">${MODS[m].ic} ${MODS[m].t}${lg[m]?' ✓':''}</button>`).join('')}</div></div>
-  <div class="grid">${Object.entries(MODS).map(([k,m])=>`<button class="mod" onclick="openMod('${k}')"><div class="ic">${m.ic}</div><b>${m.t}</b><span>${m.s}</span>${lg[k]?`<div class="done">今天 ✓ ${lg[k].score||''}</div>`:''}</button>`).join('')}</div>
-  <button class="report" onclick="report()">📋 生成今日汇报，发到群里</button>
-  <p class="note">一个词连续答对 ${MASTER} 次，就算“掌握”。进度只保存在这台设备的浏览器里，请用同一台设备练习。${canSpeak()?'':'这台设备没有中文语音，听力题会用拼音代替。'}</p>`;
+  <div class="today"><div class="k">${t('todayTask')} · ${k}</div><h2 class="fun">${t(pl[0]+'t')}</h2><p>${t(pl[0]+'d')}</p>
+    <div class="go">${pl[1].map(m=>`<button onclick="openMod('${m}')">${ICON[m]} ${mt(m)}${lg[m]?' ✓':''}</button>`).join('')}</div></div>
+  <div class="grid">${MODK.map(k=>`<button class="mod" onclick="openMod('${k}')"><div class="ic">${ICON[k]}</div><b>${mt(k)}</b><span>${t('s_'+k)}</span>${lg[k]?`<div class="done">${t('todayDone')} ${sc(lg[k].score)}</div>`:''}</button>`).join('')}</div>
+  <button class="report" onclick="report()">${t('reportBtn')}</button>
+  <p class="note">${t('note',{n:MASTER})}${canSpeak()?'':' '+t('noVoice')}</p>`;
   window.scrollTo(0,0);
 }
 function openMod(m){ ({cards,listen,recog,read,write,hw,quiz})[m](); }
 function finish(mod, score, starsGot){
   const lg=dayLog(); lg[mod]={score}; S.stars+=starsGot; touchDay(); save();
-  app.innerHTML = header(MODS[mod].t, L.sub) + `<div class="panel win"><div class="big">🎉</div><div class="mid fun">太好了！完成了！</div>
-  <p class="small">${esc(score)}　·　得到 ⭐ ${starsGot}</p><p class="small">已掌握 ${nMastered()}/${L.words.length} 个词</p>
-  <div class="row2"><button class="btn b-gold" onclick="openMod('${mod}')">再来一轮</button><button class="btn b-blue" onclick="home()">回到首页</button></div></div>`;
+  app.innerHTML = header(mt(mod), L.sub) + `<div class="panel win"><div class="big">🎉</div><div class="mid fun">${t('finish')}</div>
+  <p class="small">${esc(sc(score))}　·　${t('gotStars')} ⭐ ${starsGot}</p><p class="small">${t('masteredN',{a:nMastered(),b:L.words.length})}</p>
+  <div class="row2"><button class="btn b-gold" onclick="openMod('${mod}')">${t('again')}</button><button class="btn b-blue" onclick="home()">${t('home')}</button></div></div>`;
 }
 function pickWords(n){
   const not=shuffle(L.words.filter(x=>!mastered(x[0])).map(x=>x[0]));
@@ -196,13 +197,13 @@ function pickWords(n){
 function cards(){
   let q=pickWords(10), i=0, good=0, total=q.length;
   function show(flip){
-    if(!q.length){ return finish('cards', `认识 ${good}/${total}`, good>=8?3:good>=5?2:1); }
+    if(!q.length){ return finish('cards', ['cards',good,total], good>=8?3:good>=5?2:1); }
     const w=W[q[0]];
-    app.innerHTML = header('记新词', L.sub) + `<div class="panel"><div class="prog">还剩 ${q.length} 张</div>
+    app.innerHTML = header(mt('cards'), L.sub) + `<div class="panel"><div class="prog">${t('cardsLeft',{n:q.length})}</div>
       <div class="big">${esc(w.w)}</div>
       ${flip?`<div class="mid">${esc(w.py)}</div><p class="small">${esc(w.en)}<br>${esc(w.ru)}</p><button class="spk" onclick="speak('${w.w}')">🔊</button>
-        <div class="row2"><button class="btn b-red" id="no">还不熟 ✗</button><button class="btn b-green" id="yes">我认识 ✓</button></div>`
-      :`<p class="small">先自己说出拼音和意思，再看答案。</p><div class="row2"><button class="btn b-blue" id="flip">看答案</button></div>`}</div>`;
+        <div class="row2"><button class="btn b-red" id="no">${t('notYet')}</button><button class="btn b-green" id="yes">${t('know')}</button></div>`
+      :`<p class="small">${t('cardsHint')}</p><div class="row2"><button class="btn b-blue" id="flip">${t('show')}</button></div>`}</div>`;
     if(flip){ speak(w.w);
       document.getElementById('yes').onclick=()=>{ mark(w.w,true); good++; q.shift(); show(false); };
       document.getElementById('no').onclick=()=>{ mark(w.w,false); const c=q.shift(); q.splice(Math.min(2,q.length),0,c); show(false); };
@@ -214,9 +215,9 @@ function cards(){
 function mcq(mod, items, render){
   let i=0, good=0; const n0=items.length;
   function next(){
-    if(i>=items.length){ const sc=`第一次就答对 ${good}/${n0}`; return finish(mod, sc, good>=n0*0.9?3:good>=n0*0.6?2:1); }
+    if(i>=items.length){ return finish(mod, ['first',good,n0], good>=n0*0.9?3:good>=n0*0.6?2:1); }
     const it=items[i];
-    app.innerHTML = header(MODS[mod].t, L.sub) + `<div class="panel"><div class="prog">${it.again?'🔁 再试一次　·　':''}第 ${Math.min(i+1,n0)} / ${n0} 题</div>${render.q(it)}
+    app.innerHTML = header(mt(mod), L.sub) + `<div class="panel"><div class="prog">${it.again?t('retry')+'　·　':''}${t('qnum',{i:Math.min(i+1,n0),n:n0})}</div>${render.q(it)}
       <div class="opts">${it.opts.map((o,k)=>`<button class="opt ${render.small?'sm':''}" data-k="${k}">${esc(o)}</button>`).join('')}</div><div class="fb" id="fb"></div></div>`;
     if(render.after) render.after(it);
     app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
@@ -226,7 +227,7 @@ function mcq(mod, items, render){
       app.querySelectorAll('.opt').forEach(x=>{ if(it.opts[+x.dataset.k]===it.ans) x.classList.add('ok'); });
       if(it.word) mark(it.word, right);
       const fb=document.getElementById('fb');
-      fb.className='fb '+(right?'ok':'no'); fb.textContent = right? '对了！👍' : '不对，看看正确答案。'+(it.explain?' '+it.explain:'');
+      fb.className='fb '+(right?'ok':'no'); fb.textContent = right? t('right') : t('wrong');
       if(right && !it.again) good++; if(!right && it.retry) items.push(Object.assign({},it,{retry:false,again:true,opts:shuffle(it.opts)}));
       i++; setTimeout(next, right?700:1600);
     });
@@ -241,8 +242,8 @@ function listen(){
   const voice=canSpeak();
   const items=pickWords(10).map(w=>({word:w, ans:w, opts:shuffle([w].concat(distract(w,'w'))), retry:true}));
   mcq('listen', items, {
-    q: it => voice ? `<p class="small">听一听，选出你听到的词</p><button class="spk" id="sp">🔊</button>`
-                   : `<p class="small">（这台设备没有中文语音）看拼音，选汉字</p><div class="mid">${esc(W[it.word].py)}</div>`,
+    q: it => voice ? `<p class="small">${t('listenQ')}</p><button class="spk" id="sp">🔊</button>`
+                   : `<p class="small">${t('noVoiceQ')}</p><div class="mid">${esc(W[it.word].py)}</div>`,
     after: it => { const b=document.getElementById('sp'); if(b){ b.onclick=()=>speak(it.word); setTimeout(()=>speak(it.word),250); } }
   });
 }
@@ -254,8 +255,8 @@ function recog(){
     : {word:w, ans:w, opts:shuffle([w].concat(distract(w,'w'))), qtype:'m2h', retry:true});
   mcq('recog', items, {
     small:false,
-    q: it => it.qtype==='h2m' ? `<p class="small">这个词是什么意思？</p><div class="big">${esc(it.word)}</div>`
-                              : `<p class="small">哪个词是这个意思？</p><div class="mid">${esc(W[it.word].en)}</div><p class="small">${esc(W[it.word].ru)}</p>`,
+    q: it => it.qtype==='h2m' ? `<p class="small">${t('h2m')}</p><div class="big">${esc(it.word)}</div>`
+                              : `<p class="small">${t('m2h')}</p><div class="mid">${esc(W[it.word].en)}</div><p class="small">${esc(W[it.word].ru)}</p>`,
     after: it => { if(it.qtype==='h2m') app.querySelectorAll('.opt').forEach(b=>b.classList.add('sm')); }
   });
 }
@@ -267,11 +268,11 @@ function plain(s){ return s.replace(/[{}]/g,''); }
 function read(){
   let times=0;
   function page(){
-    app.innerHTML = header('读一读', L.sub) + `<div class="panel" style="text-align:left">
-      <p class="small">先自己读，不会的词点一下看拼音，点 🔊 听一句。读完一遍按“我读完了一遍”。</p>
+    app.innerHTML = header(mt('read'), L.sub) + `<div class="panel" style="text-align:left">
+      <p class="small">${t('readHint')}</p>
       <h2 class="fun" style="text-align:center">${esc(L.text_title)}</h2>
       ${L.text.map((l,k)=>`<div class="line">${l[0]&&!L.narrative?`<span class="who">${esc(l[0])}</span>`:''}<div class="say">${lineHTML(l[1])}</div><button class="play" data-k="${k}">🔊</button></div>`).join('')}
-      <div class="row2"><button class="btn b-gold" id="once">我读完了一遍（${times}/3）</button>${times>=3?'<button class="btn b-blue" id="qs">回答问题 →</button>':''}</div></div>`;
+      <div class="row2"><button class="btn b-gold" id="once">${t('readOnce',{n:times})}</button>${times>=3?`<button class="btn b-blue" id="qs">${t('toQs')}</button>`:''}</div></div>`;
     app.querySelectorAll('.play').forEach(b=>b.onclick=()=>speak(plain(L.text[+b.dataset.k][1])));
     document.getElementById('once').onclick=()=>{ times++; touchDay(); page(); };
     const qb=document.getElementById('qs'); if(qb) qb.onclick=questions;
@@ -279,7 +280,7 @@ function read(){
   function questions(){
     const answers=L.q.map(x=>x[1]);
     const items=L.q.map(x=>({ans:x[1], opts:shuffle(answers), q:x[0]}));
-    mcq('read', items, {small:true, q: it=>`<p class="small">课文问题</p><div class="mid">${esc(it.q)}</div>`});
+    mcq('read', items, {small:true, q: it=>`<p class="small">${t('textQ')}</p><div class="mid">${esc(it.q)}</div>`});
   }
   page();
 }
@@ -288,33 +289,33 @@ function write(){
   const chars=L.write; let cur=0, writer=null;
   function page(){
     const c=chars[cur];
-    app.innerHTML = header('写一写', L.sub) + `<div class="panel">
-      <p class="small">这些是官方 HSK 要求会写的字。先看笔顺，再自己写（手指或鼠标）。</p>
+    app.innerHTML = header(mt('write'), L.sub) + `<div class="panel">
+      <p class="small">${t('writeHint')}</p>
       <div class="charlist">${chars.map((x,k)=>`<button class="${k===cur?'cur':''} ${S.written[x.c]?'ok':''}" data-k="${k}">${x.c}</button>`).join('')}</div>
-      <div class="mid">${esc(c.c)}　<span class="small">${esc(c.py)} · 在“${esc(c.word)}”里</span></div>
+      <div class="mid">${esc(c.c)}　<span class="small">${esc(c.py)} · ${esc(t('inWord',{w:c.word}))}</span></div>
       <div class="hw"><div id="hzbox"></div></div>
       <div class="fb" id="fb"></div>
-      <div class="row2"><button class="btn b-sky" id="anim">看笔顺 ▶</button><button class="btn b-blue" id="quiz">我来写 ✍️</button>${S.written[c.c]?'':''}</div>
-      <p class="note">已经会写 ${chars.filter(x=>S.written[x.c]).length} / ${chars.length} 个字</p></div>`;
+      <div class="row2"><button class="btn b-sky" id="anim">${t('anim')}</button><button class="btn b-blue" id="quiz">${t('myTurn')}</button>${S.written[c.c]?'':''}</div>
+      <p class="note">${t('canWrite',{a:chars.filter(x=>S.written[x.c]).length,b:chars.length})}</p></div>`;
     app.querySelectorAll('.charlist button').forEach(b=>b.onclick=()=>{ cur=+b.dataset.k; page(); });
     const size=Math.min(300, window.innerWidth-80);
-    if(typeof HanziWriter==='undefined' || !STROKES[c.c]){ document.getElementById('hzbox').innerHTML='<p class="small" style="padding:20px">这台设备不能显示笔顺，请在纸上写 5 遍。</p>'; return; }
+    if(typeof HanziWriter==='undefined' || !STROKES[c.c]){ document.getElementById('hzbox').innerHTML=`<p class="small" style="padding:20px">${t('noStroke')}</p>`; return; }
     writer = HanziWriter.create('hzbox', c.c, {width:size, height:size, padding:12, showOutline:true, strokeAnimationSpeed:1, delayBetweenStrokes:250,
       charDataLoader:(ch, onLoad)=>onLoad(STROKES[ch]), strokeColor:'#14304A', radicalColor:'#17698F', outlineColor:'#DDDDDD', drawingColor:'#17698F', highlightColor:'#2FA4D8'});
     document.getElementById('anim').onclick=()=>writer.animateCharacter();
     document.getElementById('quiz').onclick=()=>startQuiz(c);
   }
   function startQuiz(c){
-    const fb=document.getElementById('fb'); fb.className='fb'; fb.textContent='按笔顺一笔一笔写。';
+    const fb=document.getElementById('fb'); fb.className='fb'; fb.textContent=t('strokeGo');
     let round=0;
     function go(outline){
       writer.quiz({showOutline:outline, showHintAfterMisses:2, leniency:1.1,
         onComplete: d => {
           round++;
-          if(round===1){ fb.className='fb ok'; fb.textContent='很好！现在不看灰色的字，自己再写一遍。'; setTimeout(()=>{ writer.hideOutline(); go(false); }, 900); }
+          if(round===1){ fb.className='fb ok'; fb.textContent=t('round2'); setTimeout(()=>{ writer.hideOutline(); go(false); }, 900); }
           else { const ok=d.totalMistakes<=2; fb.className='fb '+(ok?'ok':'no');
-            fb.textContent = ok ? `太棒了！你会写“${c.c}”了！⭐` : '有点难，再写一次吧！';
-            if(ok && !S.written[c.c]){ S.written[c.c]=true; S.stars+=1; touchDay(); save(); dayLog().write={score:`会写 ${chars.filter(x=>S.written[x.c]).length}/${chars.length}`}; save(); }
+            fb.textContent = ok ? t('wroteOk',{c:c.c}) : t('wroteNo');
+            if(ok && !S.written[c.c]){ S.written[c.c]=true; S.stars+=1; touchDay(); save(); dayLog().write={score:['write',chars.filter(x=>S.written[x.c]).length,chars.length]}; save(); }
             writer.showOutline(); }
         }});
     }
@@ -331,34 +332,34 @@ function hw(){
   let i=0, good=0;
   function norm(s){ return s.replace(/[，。！？、“”：；\s,.!?]/g,''); }
   function next(){
-    if(i>=items.length){ return finish('hw', `答对 ${good}/${items.length}`, good>=items.length*0.9?3:good>=items.length*0.6?2:1); }
+    if(i>=items.length){ return finish('hw', ['hw',good,items.length], good>=items.length*0.9?3:good>=items.length*0.6?2:1); }
     const it=items[i];
-    const head=`<div class="prog">第 ${i+1} / ${items.length} 题　·　答对 ${good}</div>`;
+    const head=`<div class="prog">${t('qnum',{i:i+1,n:items.length})}</div>`;
     if(it.t==='fill' || it.t==='fix'){
-      const q = it.t==='fill' ? `<p class="small">选词填空</p><div class="mid" style="color:var(--ink)">${esc(it.q.replace('___','（　　）'))}</div>`
-                              : `<p class="small">哪一句是对的？</p>`;
-      app.innerHTML = header('练一练', L.sub) + `<div class="panel">${head}${q}<div class="opts">${it.opts.map((o,k)=>`<button class="opt ${it.t==='fix'?'sm':''}" data-k="${k}">${esc(o)}</button>`).join('')}</div><div class="fb" id="fb"></div></div>`;
+      const q = it.t==='fill' ? `<p class="small">${t('fillQ')}</p><div class="mid" style="color:var(--ink)">${esc(it.q.replace('___','（　　）'))}</div>`
+                              : `<p class="small">${t('fixQ')}</p>`;
+      app.innerHTML = header(mt('hw'), L.sub) + `<div class="panel">${head}${q}<div class="opts">${it.opts.map((o,k)=>`<button class="opt ${it.t==='fix'?'sm':''}" data-k="${k}">${esc(o)}</button>`).join('')}</div><div class="fb" id="fb"></div></div>`;
       app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
         if(app.querySelector('.opt.ok')) return;
         const right=it.opts[+b.dataset.k]===it.ans; b.classList.add(right?'ok':'no');
         app.querySelectorAll('.opt').forEach(x=>{ if(it.opts[+x.dataset.k]===it.ans) x.classList.add('ok'); });
         const fb=document.getElementById('fb'); fb.className='fb '+(right?'ok':'no');
-        fb.textContent = right?'对了！👍':'不对。正确答案：'+(it.t==='fill'?it.q.replace('___',it.ans):it.ans);
+        fb.textContent = right?t('right'):t('wrongAns')+(it.t==='fill'?it.q.replace('___',it.ans):it.ans);
         if(right) good++; i++; setTimeout(next, right?700:2000);
       });
     } else {
       let built=[];
       function draw(){
-        app.innerHTML = header('练一练', L.sub) + `<div class="panel">${head}<p class="small">按顺序点词语，组成一句话</p>
+        app.innerHTML = header(mt('hw'), L.sub) + `<div class="panel">${head}<p class="small">${t('orderQ')}</p>
           <div class="answer">${esc(built.map(k=>it.chips[k]).join(''))}</div>
           <div class="chips">${it.chips.map((c,k)=>`<button class="chip ${built.includes(k)?'used':''}" data-k="${k}">${esc(c)}</button>`).join('')}</div>
-          <div class="row2"><button class="btn b-sky" id="clr">重来</button><button class="btn b-blue" id="chk">检查</button></div><div class="fb" id="fb"></div></div>`;
+          <div class="row2"><button class="btn b-sky" id="clr">${t('clear')}</button><button class="btn b-blue" id="chk">${t('check')}</button></div><div class="fb" id="fb"></div></div>`;
         app.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{ const k=+b.dataset.k; if(!built.includes(k)){ built.push(k); draw(); } });
         document.getElementById('clr').onclick=()=>{ built=[]; draw(); };
         document.getElementById('chk').onclick=()=>{
           const right=norm(built.map(k=>it.chips[k]).join(''))===norm(it.ans);
           const fb=document.getElementById('fb'); fb.className='fb '+(right?'ok':'no');
-          fb.textContent = right?'对了！👍 '+it.ans : '不对。正确答案：'+it.ans;
+          fb.textContent = right?t('right')+' '+it.ans : t('wrongAns')+it.ans;
           if(right) good++; i++; setTimeout(next, right?900:2200);
         };
       }
@@ -378,36 +379,36 @@ function quiz(){
     return {word:w, ans:w, opts:shuffle([w].concat(distract(w,'w'))), kind:'m2h'};
   });
   mcq('quiz', items, {
-    q: it => it.kind==='listen' ? `<p class="small">听一听，选汉字</p><button class="spk" id="sp">🔊</button>`
-          : it.kind==='h2m' ? `<p class="small">这个词是什么意思？</p><div class="big">${esc(it.word)}</div>`
-          : `<p class="small">哪个词是这个意思？</p><div class="mid">${esc(W[it.word].en)}</div>`,
+    q: it => it.kind==='listen' ? `<p class="small">${t('quizListen')}</p><button class="spk" id="sp">🔊</button>`
+          : it.kind==='h2m' ? `<p class="small">${t('h2m')}</p><div class="big">${esc(it.word)}</div>`
+          : `<p class="small">${t('m2h')}</p><div class="mid">${esc(W[it.word].en)}</div>`,
     after: it => { if(it.kind==='h2m') app.querySelectorAll('.opt').forEach(b=>b.classList.add('sm'));
                    const b=document.getElementById('sp'); if(b){ b.onclick=()=>speak(it.word); setTimeout(()=>speak(it.word),250);} }
   });
 }
 // 汇报
 function report(){
-  const t=new Date(), lg=S.log[today()]||{};
-  const lines=[`${t.getMonth()+1} 月 ${t.getDate()} 日 · ${L.title}`];
-  const keys=Object.keys(MODS).filter(k=>lg[k]);
-  if(keys.length) keys.forEach(k=>lines.push(`✅ ${MODS[k].t}：${lg[k].score||'完成'}`)); else lines.push('今天还没有练习');
+  const now=new Date(), lg=S.log[today()]||{};
+  const lines=[`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${L.title}`];
+  const keys=MODK.filter(k=>lg[k]);
+  if(keys.length) keys.forEach(k=>lines.push(`✅ ${tz('m_'+k)}：${scz(lg[k].score)||'完成'}`)); else lines.push('今天还没有练习');
   lines.push(`📚 已掌握：${nMastered()} / ${L.words.length} 个词`);
   const wc=L.write.filter(x=>S.written[x.c]).length; lines.push(`✍️ 会写：${wc} / ${L.write.length} 个字`);
   lines.push(`🔥 连续学习 ${S.days} 天　⭐ ${S.stars}`);
   const weak=L.words.filter(x=>S.w[x[0]].no>S.w[x[0]].ok && S.w[x[0]].no>0).map(x=>x[0]).slice(0,5);
   if(weak.length) lines.push(`🔁 还要多练：${weak.join('、')}`);
   const text=lines.join('\n');
-  app.innerHTML = header('今日汇报', L.sub) + `<div class="panel"><p class="small">复制下面的文字，发到群里 👇</p><textarea id="rt">${esc(text)}</textarea>
-    <div class="row2"><button class="btn b-gold" id="cp">📋 复制</button><button class="btn b-blue" onclick="home()">回到首页</button></div><div class="fb" id="fb"></div></div>`;
+  app.innerHTML = header(t('reportTitle'), L.sub) + `<div class="panel"><p class="small">${t('reportHint')}</p><textarea id="rt">${esc(text)}</textarea>
+    <div class="row2"><button class="btn b-gold" id="cp">${t('copy')}</button><button class="btn b-blue" onclick="home()">${t('home')}</button></div><div class="fb" id="fb"></div></div>`;
   document.getElementById('cp').onclick=()=>{
     const fb=document.getElementById('fb');
     const ta=document.getElementById('rt');
-    const done=()=>{ fb.className='fb ok'; fb.textContent='复制好了！去群里粘贴吧。'; };
-    try{ navigator.clipboard.writeText(text).then(done).catch(()=>{ ta.select(); fb.textContent='请长按文字，选择“复制”。'; }); }
-    catch(e){ ta.select(); fb.textContent='请长按文字，选择“复制”。'; }
+    const done=()=>{ fb.className='fb ok'; fb.textContent=t('copied'); };
+    try{ navigator.clipboard.writeText(text).then(done).catch(()=>{ ta.select(); fb.textContent=t('longPress'); }); }
+    catch(e){ ta.select(); fb.textContent=t('longPress'); }
   };
 }
-home();
+applyStatic(); home();
 </script>
 </body>
 </html>

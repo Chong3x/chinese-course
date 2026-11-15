@@ -3,6 +3,7 @@ import os, re, shutil, sys, json, html
 sys.path.insert(0, os.path.dirname(__file__))
 from content import LESSONS
 from content_l1 import L1
+from i18n import SITE as TX, LANGS, TITLES, TOPICS, DATES
 
 OUT = sys.argv[1]          # e.g. /home/claude/repo/docs
 PRACTICE = sys.argv[2]     # folder with Ln_practice.html
@@ -13,6 +14,13 @@ PDF_NAMES = {"L1": "第01课_介绍我的国家.pdf", "L2": "第02课_我怎么�
              "L4": "第04课_我的好朋友.pdf", "L5": "第05课_在饭馆.pdf"}
 
 def e(s): return html.escape(str(s), quote=True)
+
+def tx(key, tag='span', cls='', **v):
+    zh = TX[key]['zh']
+    for k, val in v.items(): zh = zh.replace('{'+k+'}', str(val))
+    dv = f" data-v='{e(json.dumps(v, ensure_ascii=False))}'" if v else ''
+    c = f' class="{cls}"' if cls else ''
+    return f'<{tag}{c} data-i="{key}"{dv}>{e(zh)}</{tag}>'
 
 CSS = """
 :root{--ink:#14304A;--soft:#3D4F63;--bg:#F7F5EE;--card:#FDFCF8;--sky:#E3F0F6;--blue:#17698F;--blue2:#2FA4D8;--gold:#F2C14E;--line:#D9E2E8}
@@ -84,14 +92,29 @@ footer{margin-top:40px;padding:24px 0 40px;color:var(--soft);font-size:13px;bord
 .qs details{background:var(--card);border-radius:12px;padding:10px 14px;margin-bottom:8px}
 .chars{display:flex;gap:10px;flex-wrap:wrap}
 .chars span{background:#fff;border:2px solid var(--line);border-radius:12px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700}
+.lang{border:none;border-radius:10px;padding:6px 8px;font-size:14px;background:#24496B;color:#F7F5EE;font-family:inherit;margin-left:14px}
+.sub-tr{font-size:15px;color:#C9DCE8;margin:-4px 0 8px}
+.lcard .sub-tr{color:var(--soft);font-size:14px;margin:0}
 .pager{display:flex;justify-content:space-between;gap:10px;margin-top:30px}
-@media (max-width:640px){.hero h1{font-size:34px}.steps{grid-template-columns:1fr 1fr}.lhead h1{font-size:30px}nav.top .links a{margin-left:10px;font-size:14px}.say{font-size:19px}}
+@media (max-width:640px){nav.top .brand{font-size:18px;white-space:nowrap}nav.top .links a{display:none}.lang{margin-left:6px}.hero h1{font-size:34px}.steps{grid-template-columns:1fr 1fr}.lhead h1{font-size:30px}nav.top .links a{margin-left:10px;font-size:14px}.say{font-size:19px}}
 """
 
 JS = """
+const TX=__TX__, LANGS=__LANGS__, LOC={zh:"zh-CN",kk:"kk-KZ",en:"en-GB",ru:"ru-RU"};
+let LANG="zh";try{LANG=localStorage.getItem("ui-lang")||"zh";}catch(e){}
+function tr(k,v){let s=(TX[k]||{})[LANG];if(s===undefined)s=(TX[k]||{}).zh||"";if(v)for(const x in v)s=String(s).split("{"+x+"}").join(v[x]);return s;}
+function apply(){document.documentElement.lang=LANG==="zh"?"zh-CN":LANG;document.querySelectorAll("[data-i]").forEach(el=>{const v=el.dataset.v?JSON.parse(el.dataset.v):null;el.textContent=tr(el.dataset.i,v);});
+ document.querySelectorAll("[data-date]").forEach(el=>{try{const d=new Date(el.dataset.date+"T12:00:00");
+  if(LANG==="kk"){const M=["қаңтар","ақпан","наурыз","сәуір","мамыр","маусым","шілде","тамыз","қыркүйек","қазан","қараша","желтоқсан"],W=["жексенбі","дүйсенбі","сейсенбі","сәрсенбі","бейсенбі","жұма","сенбі"];el.textContent=d.getDate()+" "+M[d.getMonth()]+", "+W[d.getDay()];}
+  else el.textContent=d.toLocaleDateString(LOC[LANG],{month:"long",day:"numeric",weekday:"short"});}catch(e){}});
+ document.querySelectorAll("[data-tr]").forEach(el=>{const s=tr(el.dataset.tr);el.textContent=LANG==="zh"?"":s;el.style.display=(LANG==="zh"||!s)?"none":"";});
+ const sel=document.getElementById("lang");if(sel)sel.value=LANG;}
+function setLang(l){LANG=l;try{localStorage.setItem("ui-lang",l);}catch(e){}apply();}
+document.addEventListener("DOMContentLoaded",apply);
+
 let zh=null;function pv(){try{const v=speechSynthesis.getVoices();zh=v.find(x=>/^zh(-|_)?CN/i.test(x.lang))||v.find(x=>/^zh/i.test(x.lang))||null;}catch(e){}}
 try{pv();speechSynthesis.onvoiceschanged=pv;}catch(e){}
-function say(t){if(!zh){alertBox('这台设备没有中文语音。');return;}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.voice=zh;u.lang=zh.lang;u.rate=0.8;speechSynthesis.speak(u);}catch(e){}}
+function say(t){if(!zh){alertBox(tr('noVoice'));return;}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.voice=zh;u.lang=zh.lang;u.rate=0.8;speechSynthesis.speak(u);}catch(e){}}
 function alertBox(m){let d=document.getElementById('msg');if(!d){d=document.createElement('div');d.id='msg';d.style.cssText='position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#14304A;color:#fff;padding:10px 16px;border-radius:12px;z-index:9';document.body.appendChild(d);}d.textContent=m;d.style.display='block';setTimeout(()=>d.style.display='none',2500);}
 document.addEventListener('click',ev=>{
   const c=ev.target.closest('.vc');if(c){c.classList.toggle('open');say(c.dataset.w);return;}
@@ -110,13 +133,13 @@ def head(title, depth):
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=ZCOOL+KuaiLe&display=swap">
 <link rel="stylesheet" href="{up}assets/style.css"></head><body>
 <nav class="top"><div class="wrap"><a class="brand fun" href="{up}index.html">{SITE}</a>
-<div class="links"><a href="{up}index.html#lessons">课程</a><a href="{up}index.html#more">更多资料</a></div></div></nav>"""
+<div class="links"><a href="{up}index.html#lessons" data-i="navLessons">课程</a><a href="{up}index.html#more" data-i="navMore">更多资料</a>
+<select id="lang" class="lang" onchange="setLang(this.value)" aria-label="Language">{''.join(f'<option value="{k}">{n}</option>' for k, n in LANGS)}</select></div></div></nav>"""
 
 def foot(depth):
     up = '../' * depth
     return f"""<footer><div class="wrap">
-<p>生词和等级按 2025 年 11 月发布的新版 HSK 考试大纲（中外语言交流合作中心）编写；课文、例句和练习为本课程原创，人物均为虚构。</p>
-<p>笔顺动画：Hanzi Writer（MIT 许可）；笔顺数据：hanzi-writer-data（Arphic Public License）。字体：Google Fonts。</p>
+{tx('foot1','p')}{tx('foot2','p')}
 </div></footer><script src="{up}assets/site.js"></script></body></html>"""
 
 def nwrender(s, words):
@@ -149,20 +172,20 @@ def lesson_page(L, prev, nxt):
                     for s, t in L['text'])
     qs = ''.join(f'<details><summary>{e(q)}</summary>{e(a)}</details>' for q, a in L['q'])
     chars = ''.join(f'<span>{e(c)}</span>' for c, py, w in L['write'])
-    pager = f'<div class="pager">{f"<a class=\"btn b-sky\" href=\"{prev}.html\">← 上一课</a>" if prev else "<span></span>"}{f"<a class=\"btn b-sky\" href=\"{nxt}.html\">下一课 →</a>" if nxt else ""}</div>'
+    pager = f'<div class="pager">{f"<a class=\"btn b-sky\" href=\"{prev}.html\" data-i=\"prev\">← 上一课</a>" if prev else "<span></span>"}{f"<a class=\"btn b-sky\" href=\"{nxt}.html\" data-i=\"next\">下一课 →</a>" if nxt else ""}</div>'
     body = f"""{head(f'第 {n} 课 · {L["title"]} · {SITE}', 1)}
-<header class="lhead"><div class="wrap"><div class="k">第 {n} 课 · {e(level_tag(L))} · {e(L.get('date',''))}</div>
-<h1 class="fun">{e(L['title'])}</h1><p>话题：{e(L.get('topic',''))}　·　{len(L['words'])} 个生词</p>
-<div class="acts"><a class="btn b-gold" href="../practice/{L['id']}.html">🎯 开始课后练习</a><a class="btn b-sky" href="../pdf/{e(PDF_NAMES[L['id']])}">📄 上课幻灯片（PDF）</a></div></div></header>
+<header class="lhead"><div class="wrap"><div class="k">{tx('lessonN', n=n)} · {e(level_tag(L)) if L['id']!='L1' else tx('tagReview')} · <span data-date="{DATES[L['id']]}">{e(L.get('date',''))}</span></div>
+<h1 class="fun">{e(L['title'])}</h1><div class="sub-tr" data-tr="title_{L['id']}"></div><p>{tx('topicLabel')}<span data-i="topic_{L['id']}">{e(L.get('topic',''))}</span>　·　{tx('nWords', n=len(L['words']))}</p>
+<div class="acts"><a class="btn b-gold" href="../practice/{L['id']}.html" data-i="startPractice">🎯 开始课后练习</a><a class="btn b-sky" href="../pdf/{e(PDF_NAMES[L['id']])}" data-i="pdf">📄 上课幻灯片（PDF）</a></div></div></header>
 <main class="wrap">
-<section class="block"><h2 class="sec fun">生词</h2><p class="lead">先看汉字，自己说出拼音和意思，再点一下卡片看答案、听发音。</p>
-<div class="toolbar"><button data-toggle="hide-py" data-box="vg" class="on">隐藏拼音</button><button data-toggle="hide-mn" data-box="vg" class="on">隐藏意思</button></div>
+<section class="block">{tx('secWords','h2','sec fun')}{tx('leadWords','p','lead')}
+<div class="toolbar"><button data-toggle="hide-py" data-box="vg" class="on" data-i="hidePy">隐藏拼音</button><button data-toggle="hide-mn" data-box="vg" class="on" data-i="hideMn">隐藏意思</button></div>
 <div class="vgrid hide-py hide-mn" id="vg">{vcards}</div></section>
-<section class="block"><h2 class="sec fun">语法和句型</h2>{grams}</section>
-<section class="block"><h2 class="sec fun">课文：{e(L['text_title'])}</h2><p class="lead">先不看拼音读一遍。不认识的词点一下看拼音，点 🔊 听这一句。</p>
-<div class="toolbar"><button data-toggle="allpy" data-box="tx">显示全部拼音</button></div>
+<section class="block">{tx('secGram','h2','sec fun')}{grams}</section>
+<section class="block"><h2 class="sec fun">{tx('secText')}：{e(L['text_title'])}</h2>{tx('leadText','p','lead')}
+<div class="toolbar"><button data-toggle="allpy" data-box="tx" data-i="allPy">显示全部拼音</button></div>
 <div class="text" id="tx">{lines}</div><div class="qs">{qs}</div></section>
-<section class="block"><h2 class="sec fun">本课要会写的字</h2><p class="lead">官方 HSK 手写字。到“课后练习 → 写一写”里看笔顺、练习书写。</p><div class="chars">{chars}</div></section>
+<section class="block">{tx('secChars','h2','sec fun')}{tx('leadChars','p','lead')}<div class="chars">{chars}</div></section>
 {pager}
 </main>{foot(1)}"""
     return body
@@ -171,41 +194,39 @@ def index_page():
     cards = ''
     for L in ALL:
         ws = '　'.join(w for w, *_ in L['words'][:4])
-        cards += f"""<div class="lcard"><div class="k">第 {L['num']} 课<span class="tag">{e(level_tag(L))}</span></div><h3 class="fun">{e(L['title'])}</h3>
-<div class="t">{e(L.get('topic',''))} · {len(L['words'])} 个生词</div><div class="w">{e(ws)}……</div>
-<div class="acts"><a class="btn b-blue" href="lessons/{L['id']}.html">📖 学课文</a><a class="btn b-gold" href="practice/{L['id']}.html">🎯 练习</a></div></div>"""
-    res = [
-        ("https://hskstory.com/", "HSKStory 分级故事", "按 HSK 等级写的中文小故事，有拼音和音频，适合课外阅读。"),
-        ("https://hskstory.com/guides/hsk-30-syllabus", "新版 HSK 大纲介绍", "各级的话题、任务和语法一览（HSKStory）。"),
-        ("https://hskstory.com/guides/hsk-3-syllabus", "HSK 3 大纲详解", "HSK 3 的话题、任务和语法（HSKStory）。下一阶段的目标。"),
-        ("https://www.chinesetest.cn", "HSK 官方网站", "考试报名、考试日期和官方说明。"),
-    ]
-    resh = ''.join(f'<a href="{u}" target="_blank" rel="noopener"><b>{e(t)} ↗</b><span>{e(d)}</span></a>' for u, t, d in res)
+        tag = tx('tagReview', cls='tag') if L['id'] == 'L1' else f'<span class="tag">{e(level_tag(L))}</span>'
+        cards += f"""<div class="lcard"><div class="k">{tx('lessonN', n=L['num'])}{tag}</div><h3 class="fun">{e(L['title'])}</h3><div class="sub-tr" data-tr="title_{L['id']}"></div>
+<div class="t"><span data-i="topic_{L['id']}">{e(L.get('topic',''))}</span> · {tx('nWords', n=len(L['words']))}</div><div class="w">{e(ws)}……</div>
+<div class="acts"><a class="btn b-blue" href="lessons/{L['id']}.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="practice/{L['id']}.html" data-i="btnPractice">🎯 练习</a></div></div>"""
+    res = [("https://hskstory.com/", "r1"), ("https://hskstory.com/guides/hsk-30-syllabus", "r2"),
+           ("https://hskstory.com/guides/hsk-3-syllabus", "r3"), ("https://www.chinesetest.cn", "r4")]
+    resh = ''.join(f'<a href="{u}" target="_blank" rel="noopener"><b>{tx(k+"t")} ↗</b>{tx(k+"d")}</a>' for u, k in res)
     return f"""{head(SITE + ' · 新版 HSK 课程', 0)}
 <header class="hero"><div class="wrap"><h1 class="fun">轻松学中文</h1>
-<p>按 2025 年新版 HSK 官方大纲编写的中文课：每节课一个生活话题，课文、生词、语法和课后练习都在这里。</p>
-<a class="btn b-gold" href="lessons/L2.html">开始学习 →</a></div></header>
+{tx('heroP','p')}
+<a class="btn b-gold" href="lessons/L2.html" data-i="start">开始学习 →</a></div></header>
 <main class="wrap">
-<section class="block"><h2 class="sec fun">怎么学</h2><p class="lead">每天 15 分钟，一点一点进步。</p>
-<div class="steps"><div class="step"><b>1</b>上课：周一、周三 21:00</div><div class="step"><b>2</b>课后：每天打开“练习”，做今日任务</div>
-<div class="step"><b>3</b>练完：按“生成今日汇报”，发到群里</div><div class="step"><b>4</b>周六：周末小测，看看这周学会了多少</div></div></section>
-<section class="block" id="lessons"><h2 class="sec fun">课程</h2><p class="lead">点“学课文”复习这节课，点“练习”做课后练习。练习进度保存在你自己的手机或电脑里，请用同一台设备练习。</p>
+<section class="block">{tx('howTitle','h2','sec fun')}{tx('howLead','p','lead')}
+<div class="steps"><div class="step"><b>1</b>{tx('step1')}</div><div class="step"><b>2</b>{tx('step2')}</div>
+<div class="step"><b>3</b>{tx('step3')}</div><div class="step"><b>4</b>{tx('step4')}</div></div></section>
+<section class="block" id="lessons">{tx('lessonsTitle','h2','sec fun')}{tx('lessonsLead','p','lead')}
 <div class="cards">{cards}</div></section>
-<section class="block" id="more"><h2 class="sec fun">更多资料</h2><p class="lead">课外想多读一点、多了解考试，可以看这些网站。</p><div class="res">{resh}</div></section>
+<section class="block" id="more">{tx('moreTitle','h2','sec fun')}{tx('moreLead','p','lead')}<div class="res">{resh}</div></section>
 </main>{foot(0)}"""
 
 def practice_page(lid):
     h = open(os.path.join(PRACTICE, f'{lid}_practice.html'), encoding='utf-8').read()
     bar = ('<div style="max-width:760px;margin:0 auto;padding:12px 16px 0;display:flex;gap:14px;font-size:15px;font-weight:700">'
-           f'<a href="../lessons/{lid}.html" style="color:#17698F;text-decoration:none">← 回到课文</a>'
-           '<a href="../index.html" style="color:#17698F;text-decoration:none">课程首页</a></div>')
+           f'<a href="../lessons/{lid}.html" style="color:#17698F;text-decoration:none" data-i="backLesson">← 回到课文</a>'
+           '<a href="../index.html" style="color:#17698F;text-decoration:none" data-i="courseHome">课程首页</a></div>')
     return h.replace('<div class="wrap" id="app"></div>', bar + '<div class="wrap" id="app"></div>', 1)
 
 def main():
     if os.path.exists(OUT): shutil.rmtree(OUT)
     for d in ('assets', 'lessons', 'practice', 'pdf'): os.makedirs(os.path.join(OUT, d))
     open(os.path.join(OUT, 'assets/style.css'), 'w', encoding='utf-8').write(CSS)
-    open(os.path.join(OUT, 'assets/site.js'), 'w', encoding='utf-8').write(JS)
+    full = dict(TX); full.update({f'title_{k}': v for k, v in TITLES.items()}); full.update({f'topic_{k}': v for k, v in TOPICS.items()})
+    open(os.path.join(OUT, 'assets/site.js'), 'w', encoding='utf-8').write(JS.replace('__TX__', json.dumps(full, ensure_ascii=False)).replace('__LANGS__', json.dumps(LANGS, ensure_ascii=False)))
     open(os.path.join(OUT, '.nojekyll'), 'w').write('')
     open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(index_page())
     ids = [L['id'] for L in ALL]

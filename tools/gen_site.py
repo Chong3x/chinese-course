@@ -115,6 +115,12 @@ def level_page(lv):
 <span class="chip" data-prog="{lid}" data-n="{len(L['words'])}">{e(TX['stTodo']['zh'])}</span>
 <div class="acts"><a class="btn b-blue" href="{k:02d}.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="{k:02d}-practice.html" data-i="btnPractice">🎯 练习</a></div></div>"""
     n_open = len(lv['lessons'])
+    if lv['id'] == 'hsk2':
+        L1x = ALL['L1']
+        rows = f"""<div class="lrow" style="background:#FDF1D2"><div class="no" style="background:#F2C14E;color:#14304A">00</div><div class="tt">{tx('placeKicker','p','small')}<p class="n">{e(L1x['title'])}</p><div class="sub-tr" data-tr="title_L1" style="color:var(--soft);margin:0;font-size:14px"></div>
+<p class="small"><span data-i="topic_L1">{e(L1x['topic'])}</span> · {tx('nWords', n=len(L1x['words']))}</p></div>
+<span class="chip" data-prog="L1" data-n="{len(L1x['words'])}">{e(TX['stTodo']['zh'])}</span>
+<div class="acts"><a class="btn b-blue" href="../start/index.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="../start/practice.html" data-i="btnPractice">🎯 练习</a></div></div>""" + rows
     if n_open:
         for k in range(n_open + 1, n_open + 3):
             rows += f'<div class="lrow soon"><div class="no">{k:02d}</div><div class="tt">{tx("soon","p","n")}</div><span class="chip soon" data-i="soon">即将推出</span></div>'

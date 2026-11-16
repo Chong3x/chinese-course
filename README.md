@@ -10,8 +10,8 @@
 | `data/lessons/L2.json` … | 每节课的结构化数据：生词（汉字、拼音、英文、俄文）、语法、课文、练习、答案、手写字 |
 | `slides/` | 上课幻灯片（Claude Slides 格式：`project/deck.json` + `project/slides/*.html` + `project/deck.css`） |
 | `practice/` | 课后练习网页（单个 HTML 文件，直接用浏览器打开） |
-| `docs/` | 课程网站（GitHub Pages）：https://chong3x.github.io/chinese-course/ |
-| `tools/` | 生成工具：`gen.py` 生成幻灯片，`gen_practice.py` 生成练习网页，`gen_site.py` 生成网站 |
+| `docs/` | 课程网站（GitHub Pages）：https://chong3x.github.io/chinese-course/ 按 HSK 1–6 分级：`docs/hsk2/01.html` 是 HSK 2 第 1 课，`docs/start/` 是水平测试课 |
+| `tools/` | 生成工具：`gen.py` 生成幻灯片，`gen_practice.py` 生成练习网页，`gen_site.py` 生成网站，`site_map.py` 管理每课属于哪个等级，`i18n.py` 是四种界面语言 |
 
 ## 课程进度
 

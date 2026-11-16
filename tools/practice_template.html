@@ -30,6 +30,13 @@ header.top .tr{font-size:14px;color:var(--soft)}
 .today h2{margin:6px 0 4px;font-size:24px}
 .today p{margin:0;color:#C9DCE8;font-size:15px;line-height:1.6}
 .today .go{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+.tasks{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.task{display:flex;align-items:center;gap:12px;border:none;border-radius:12px;padding:12px;background:var(--gold);color:var(--ink);text-align:left;font-family:inherit}
+.task.on{background:#24496B;color:#F7F5EE}
+.task .ck{width:28px;height:28px;border-radius:50%;border:3px solid currentColor;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none;box-sizing:border-box}
+.task.on .ck{background:#2E7D4F;border-color:#2E7D4F;color:#fff}
+.task .tx{flex:1;display:flex;flex-direction:column}.task .tx b{font-size:16px}.task .tx small{font-size:12px;opacity:.85}
+.task .ar{font-size:22px;font-weight:700}
 .today .go button{border:none;background:var(--gold);color:var(--ink);border-radius:12px;padding:10px 14px;font-weight:700;font-size:15px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .mod{background:var(--card);border:2px solid transparent;border-radius:18px;padding:16px;text-align:left;color:var(--ink)}
@@ -153,22 +160,25 @@ const app=document.getElementById('app');
 function header(title, sub, back=true, tr=''){
   return `<header class="top"><div><div class="t1">${esc(sub)}</div><h1 class="fun">${esc(title)}</h1>${tr?`<div class="tr">${esc(tr)}</div>`:''}</div><div class="hright">${back?`<button class="back" onclick="home()">${t('back')}</button>`:langSel()}</div></header>`;
 }
-const PLANS = {0:['p0',['cards']],1:['p1',['cards']],2:['p2',['cards','listen']],3:['p1',['cards']],4:['p4',['recog','read']],5:['p5',['write','hw']],6:['p6',['quiz']]};
+const PLANS = {0:['p0',['cards']],1:['pX',['cards','listen']],2:['pX',['recog','read']],3:['pX',['write','hw']],4:['pX',['cards','recog']],5:['pX',['read','hw']],6:['p6',['quiz']]};
 const MODK = ['cards','listen','recog','read','write','hw','quiz'];
 const ICON = {cards:'🃏',listen:'👂',recog:'👀',read:'📖',write:'✍️',hw:'📝',quiz:'🏆'};
 function mt(k){ return t('m_'+k); }
 function home(){
   const n=nMastered(), tot=L.words.length, p=Math.round(n/tot*100);
   const d=new Date().getDay(); const pl=PLANS[d]; const lg=S.log[today()]||{};
-  const k=t('wd')[d]+((d===1||d===3)?' · '+t('classDay'):'');
+  const k=t('wd')[d];
+  const ptitle = pl[0]==='pX' ? pl[1].map(mt).join(' + ') : t(pl[0]+'t');
+  const pdesc = pl[0]==='pX' ? t('pXd') : t(pl[0]+'d');
+  const ndone = pl[1].filter(m=>lg[m]).length;
   app.innerHTML = header(L.title, L.sub, false, (L.tr||{})[LANG]&&LANG!=='zh'?L.tr[LANG]:'') + `
   <div class="stats">
     <div class="stat"><b>${n}/${tot}</b><span>${t('mastered')}</span><div class="bar"><i style="width:${p}%"></i></div></div>
     <div class="stat"><b>⭐ ${S.stars}</b><span>${t('stars')}</span></div>
     <div class="stat"><b>🔥 ${S.days}</b><span>${t('streak')}</span></div>
   </div>
-  <div class="today"><div class="k">${t('todayTask')} · ${k}</div><h2 class="fun">${t(pl[0]+'t')}</h2><p>${t(pl[0]+'d')}</p>
-    <div class="go">${pl[1].map(m=>`<button onclick="openMod('${m}')">${ICON[m]} ${mt(m)}${lg[m]?' ✓':''}</button>`).join('')}</div></div>
+  <div class="today"><div class="k">${t('todayTask')} · ${k}<span style="float:right;color:#C9DCE8;font-weight:400">${t('doneN',{a:ndone,b:pl[1].length})}</span></div><h2 class="fun">${ptitle}</h2><p>${pdesc}</p>
+    <div class="tasks">${pl[1].map(m=>`<button class="task ${lg[m]?'on':''}" onclick="openMod('${m}')"><span class="ck">${lg[m]?'✓':''}</span><span class="tx"><b>${ICON[m]} ${mt(m)}</b><small>${lg[m]?sc(lg[m].score):t('s_'+m)}</small></span><span class="ar">›</span></button>`).join('')}</div></div>
   <div class="grid">${MODK.map(k=>`<button class="mod" onclick="openMod('${k}')"><div class="ic">${ICON[k]}</div><b>${mt(k)}</b><span>${t('s_'+k)}</span>${lg[k]?`<div class="done">${t('todayDone')} ${sc(lg[k].score)}</div>`:''}</button>`).join('')}</div>
   <button class="report" onclick="report()">${t('reportBtn')}</button>
   <p class="note">${t('note',{n:MASTER})}${canSpeak()?'':' '+t('noVoice')}</p>`;
@@ -383,7 +393,7 @@ function quiz(){
 // 汇报
 function report(){
   const now=new Date(), lg=S.log[today()]||{};
-  const lines=[`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${L.title}`];
+  const lines=[`${now.getMonth()+1} 月 ${now.getDate()} 日 · ${L.sub.replace('课后练习 · ','')} · ${L.title}`];
   const keys=MODK.filter(k=>lg[k]);
   if(keys.length) keys.forEach(k=>lines.push(`✅ ${tz('m_'+k)}：${scz(lg[k].score)||'完成'}`)); else lines.push('今天还没有练习');
   lines.push(`📚 已掌握：${nMastered()} / ${L.words.length} 个词`);
@@ -402,6 +412,7 @@ function report(){
     catch(e){ ta.select(); fb.textContent=t('longPress'); }
   };
 }
+try{ if(L.nav) localStorage.setItem('last-lesson', JSON.stringify(L.nav)); }catch(e){}
 applyStatic(); home();
 </script>
 </body>

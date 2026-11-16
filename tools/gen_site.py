@@ -1,146 +1,63 @@
-"""生成课程网站（GitHub Pages，放在 docs/ 目录）"""
+"""生成课程网站（GitHub Pages，docs/）：首页 → HSK 1–6 等级页 → 课文页 → 课后练习"""
 import os, re, shutil, sys, json, html
 sys.path.insert(0, os.path.dirname(__file__))
 from content import LESSONS
 from content_l1 import L1
-from i18n import SITE as TX, LANGS, TITLES, TOPICS, DATES
+from i18n import SITE as TX, LANGS, TITLES, TOPICS
+from site_map import LEVELS, lesson_nav
 
-OUT = sys.argv[1]          # e.g. /home/claude/repo/docs
-PRACTICE = sys.argv[2]     # folder with Ln_practice.html
-PDFS = sys.argv[3]         # folder with student PDFs
-ALL = [L1] + LESSONS
-SITE = "轻松学中文"
+OUT, PRACTICE, PDFS = sys.argv[1], sys.argv[2], sys.argv[3]
+ALL = {L['id']: L for L in [L1] + LESSONS}
 PDF_NAMES = {"L1": "第01课_介绍我的国家.pdf", "L2": "第02课_我怎么去学校.pdf", "L3": "第03课_我的爱好.pdf",
              "L4": "第04课_我的好朋友.pdf", "L5": "第05课_在饭馆.pdf"}
 
-def e(s): return html.escape(str(s), quote=True)
+OFFICIAL = {}
+for line in open('/home/claude/hsk30repo/corpus/syllabus2025/syllabus2025_words.tsv', encoding='utf-8'):
+    p = line.rstrip('\n').split('\t')
+    if len(p) > 1 and p[0] != 'word': OFFICIAL.setdefault(p[0], p[1])
+def coverage(lv):
+    return len({w for lid in lv['lessons'] for w, *_ in ALL[lid]['words'] if OFFICIAL.get(w) == str(lv['n'])})
 
+def e(s): return html.escape(str(s), quote=True)
 def tx(key, tag='span', cls='', **v):
     zh = TX[key]['zh']
-    for k, val in v.items(): zh = zh.replace('{'+k+'}', str(val))
+    for k, val in v.items(): zh = zh.replace('{' + k + '}', str(val))
     dv = f" data-v='{e(json.dumps(v, ensure_ascii=False))}'" if v else ''
     c = f' class="{cls}"' if cls else ''
     return f'<{tag}{c} data-i="{key}"{dv}>{e(zh)}</{tag}>'
 
-CSS = """
-:root{--ink:#14304A;--soft:#3D4F63;--bg:#F7F5EE;--card:#FDFCF8;--sky:#E3F0F6;--blue:#17698F;--blue2:#2FA4D8;--gold:#F2C14E;--line:#D9E2E8}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',Arial,sans-serif;line-height:1.6}
-a{color:var(--blue)}
-.fun{font-family:'ZCOOL KuaiLe','Noto Sans SC',sans-serif;font-weight:400}
-.wrap{max-width:960px;margin:0 auto;padding:0 18px}
-nav.top{background:var(--ink);color:#F7F5EE}
-nav.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px}
-nav.top a{color:#F7F5EE;text-decoration:none;font-weight:700}
-nav.top .brand{font-size:22px}
-nav.top .links a{margin-left:16px;font-size:15px;opacity:.9}
-.hero{background:var(--ink);color:#F7F5EE;padding:40px 0 56px}
-.hero h1{font-size:44px;margin:0 0 10px;line-height:1.2}
-.hero p{color:#C9DCE8;font-size:18px;margin:0 0 22px;max-width:640px}
-.btn{display:inline-block;border:none;border-radius:14px;padding:12px 20px;font-size:17px;font-weight:700;text-decoration:none;cursor:pointer;font-family:inherit}
-.b-gold{background:var(--gold);color:var(--ink)}.b-blue{background:var(--blue);color:#fff}.b-sky{background:var(--sky);color:var(--ink)}
-section.block{padding:34px 0 8px}
-h2.sec{font-size:30px;margin:0 0 6px}
-p.lead{color:var(--soft);margin:0 0 18px}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.step{background:var(--card);border-radius:18px;padding:16px}
-.step b{display:block;font-size:30px;color:var(--blue)}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.lcard{background:var(--card);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:8px;border:2px solid transparent}
-.lcard:hover{border-color:var(--blue2)}
-.lcard .k{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:1px}
-.lcard h3{margin:0;font-size:24px}
-.lcard .t{color:var(--soft);font-size:14px}
-.lcard .w{font-size:20px;letter-spacing:2px}
-.lcard .acts{display:flex;gap:8px;margin-top:auto;padding-top:8px;flex-wrap:wrap}
-.lcard .acts a{font-size:15px;padding:9px 14px}
-.tag{display:inline-block;background:var(--gold);color:var(--ink);border-radius:8px;padding:1px 8px;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle}
-.res{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.res a{background:var(--card);border-radius:16px;padding:16px;text-decoration:none;color:var(--ink);display:block}
-.res a b{display:block;font-size:17px}.res a span{color:var(--soft);font-size:14px}
-footer{margin-top:40px;padding:24px 0 40px;color:var(--soft);font-size:13px;border-top:1px solid var(--line)}
-.lhead{background:var(--ink);color:#F7F5EE;padding:26px 0 30px}
-.lhead .k{color:var(--gold);font-weight:700;font-size:14px;letter-spacing:1px}
-.lhead h1{font-size:40px;margin:4px 0 6px;line-height:1.2}
-.lhead p{color:#C9DCE8;margin:0 0 16px}
-.lhead .acts{display:flex;gap:10px;flex-wrap:wrap}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.toolbar button{border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;font-size:15px;font-weight:700;color:var(--ink);cursor:pointer;font-family:inherit}
-.toolbar button.on{border-color:var(--blue);background:var(--sky)}
-.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.vc{background:var(--card);border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;border:2px solid transparent;user-select:none}
-.vc:active{border-color:var(--blue2)}
-.vc .zh{font-size:34px;font-weight:700;line-height:1.3}
-.vc .py{color:var(--blue);font-weight:700;font-size:16px}
-.vc .mn{color:var(--soft);font-size:13px;line-height:1.4}
-.hide-py .vc:not(.open) .py,.hide-mn .vc:not(.open) .mn{visibility:hidden}
-.gram{background:var(--card);border-radius:18px;padding:16px 18px;margin-bottom:12px}
-.gram h3{margin:0 0 6px;font-size:22px}
-.gram .rule{display:inline-block;background:var(--gold);border-radius:10px;padding:4px 12px;font-weight:700;font-size:15px;margin-bottom:8px}
-.gram .ex{font-size:20px;margin:6px 0;padding-left:14px;border-left:5px solid var(--blue2)}
-.gram details{margin-top:8px;color:var(--soft)}
-.text{background:var(--card);border-radius:18px;padding:12px 16px}
-.line{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
-.line:last-child{border-bottom:none}
-.who{flex:none;background:var(--blue);color:#fff;border-radius:8px;padding:2px 8px;font-size:13px;font-weight:700;margin-top:6px}
-.say{flex:1;font-size:21px;line-height:1.8}
-.play{flex:none;border:none;background:var(--sky);border-radius:10px;padding:6px 10px;font-size:17px;cursor:pointer}
-.nw{font-weight:700;border-bottom:2px dotted var(--blue2);cursor:pointer}
-.nw .p{display:none;font-size:13px;color:var(--blue);font-weight:400;margin-left:2px}
-.nw.show .p,.allpy .nw .p{display:inline}
-.qs{margin-top:12px}
-.qs details{background:var(--card);border-radius:12px;padding:10px 14px;margin-bottom:8px}
-.chars{display:flex;gap:10px;flex-wrap:wrap}
-.chars span{background:#fff;border:2px solid var(--line);border-radius:12px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700}
-.lang{border:none;border-radius:10px;padding:6px 8px;font-size:14px;background:#24496B;color:#F7F5EE;font-family:inherit;margin-left:14px}
-.sub-tr{font-size:15px;color:#C9DCE8;margin:-4px 0 8px}
-.lcard .sub-tr{color:var(--soft);font-size:14px;margin:0}
-.pager{display:flex;justify-content:space-between;gap:10px;margin-top:30px}
-@media (max-width:640px){nav.top .brand{font-size:18px;white-space:nowrap}nav.top .links a{display:none}.lang{margin-left:6px}.hero h1{font-size:34px}.steps{grid-template-columns:1fr 1fr}.lhead h1{font-size:30px}nav.top .links a{margin-left:10px;font-size:14px}.say{font-size:19px}}
-"""
+CSS = open(os.path.join(os.path.dirname(__file__), 'site.css'), encoding='utf-8').read()
+JS = open(os.path.join(os.path.dirname(__file__), 'site.js'), encoding='utf-8').read()
+SPK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14304A" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>'
 
-JS = """
-const TX=__TX__, LANGS=__LANGS__, LOC={zh:"zh-CN",kk:"kk-KZ",en:"en-GB",ru:"ru-RU"};
-let LANG="zh";try{LANG=localStorage.getItem("ui-lang")||"zh";}catch(e){}
-function tr(k,v){let s=(TX[k]||{})[LANG];if(s===undefined)s=(TX[k]||{}).zh||"";if(v)for(const x in v)s=String(s).split("{"+x+"}").join(v[x]);return s;}
-function apply(){document.documentElement.lang=LANG==="zh"?"zh-CN":LANG;document.querySelectorAll("[data-i]").forEach(el=>{const v=el.dataset.v?JSON.parse(el.dataset.v):null;el.textContent=tr(el.dataset.i,v);});
- document.querySelectorAll("[data-date]").forEach(el=>{try{const d=new Date(el.dataset.date+"T12:00:00");
-  if(LANG==="kk"){const M=["қаңтар","ақпан","наурыз","сәуір","мамыр","маусым","шілде","тамыз","қыркүйек","қазан","қараша","желтоқсан"],W=["жексенбі","дүйсенбі","сейсенбі","сәрсенбі","бейсенбі","жұма","сенбі"];el.textContent=d.getDate()+" "+M[d.getMonth()]+", "+W[d.getDay()];}
-  else el.textContent=d.toLocaleDateString(LOC[LANG],{month:"long",day:"numeric",weekday:"short"});}catch(e){}});
- document.querySelectorAll("[data-tr]").forEach(el=>{const s=tr(el.dataset.tr);el.textContent=LANG==="zh"?"":s;el.style.display=(LANG==="zh"||!s)?"none":"";});
- const sel=document.getElementById("lang");if(sel)sel.value=LANG;}
-function setLang(l){LANG=l;try{localStorage.setItem("ui-lang",l);}catch(e){}apply();}
-document.addEventListener("DOMContentLoaded",apply);
-
-let zh=null;function pv(){try{const v=speechSynthesis.getVoices();zh=v.find(x=>/^zh(-|_)?CN/i.test(x.lang))||v.find(x=>/^zh/i.test(x.lang))||null;}catch(e){}}
-try{pv();speechSynthesis.onvoiceschanged=pv;}catch(e){}
-function say(t){if(!zh){alertBox(tr('noVoice'));return;}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.voice=zh;u.lang=zh.lang;u.rate=0.8;speechSynthesis.speak(u);}catch(e){}}
-function alertBox(m){let d=document.getElementById('msg');if(!d){d=document.createElement('div');d.id='msg';d.style.cssText='position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#14304A;color:#fff;padding:10px 16px;border-radius:12px;z-index:9';document.body.appendChild(d);}d.textContent=m;d.style.display='block';setTimeout(()=>d.style.display='none',2500);}
-document.addEventListener('click',ev=>{
-  const c=ev.target.closest('.vc');if(c){c.classList.toggle('open');say(c.dataset.w);return;}
-  const n=ev.target.closest('.nw');if(n){n.classList.toggle('show');return;}
-  const p=ev.target.closest('[data-say]');if(p){say(p.dataset.say);return;}
-  const t=ev.target.closest('[data-toggle]');if(t){const cls=t.dataset.toggle;const box=document.getElementById(t.dataset.box);box.classList.toggle(cls);t.classList.toggle('on');}
-});
-"""
-
-def head(title, depth):
+def page(title, depth, body, active='', lesson_json=''):
     up = '../' * depth
+    langs = ''.join(f'<option value="{k}">{n}</option>' for k, n in LANGS)
+    data_lesson = f" data-lesson='{e(lesson_json)}'" if lesson_json else ''
+    ic = lambda d: f'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">{d}</svg>'
+    def bn(key, href, icon, extra=''):
+        on = ' class="on"' if active == key else ''
+        return f'<a href="{href}"{on}{extra}>{icon}{tx(key)}</a>'
+    bnav = ('<nav class="bnav" aria-label="Menu">'
+            + bn('navHome', f'{up}index.html', ic('<path d="M3 11 12 4l9 7v9H3z"/>'))
+            + bn('navLevels', f'{up}index.html#levels', ic('<path d="M4 20V10M10 20V6M16 20v-8M22 20H2"/>'))
+            + bn('navPractice', f'{up}index.html#levels', ic('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>'), ' id="bnav-practice"')
+            + bn('navMock', f'{up}hsk2/index.html#mock', ic('<path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/>'))
+            + '</nav>')
     return f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{e(title)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=ZCOOL+KuaiLe&display=swap">
-<link rel="stylesheet" href="{up}assets/style.css"></head><body>
-<nav class="top"><div class="wrap"><a class="brand fun" href="{up}index.html">{SITE}</a>
-<div class="links"><a href="{up}index.html#lessons" data-i="navLessons">课程</a><a href="{up}index.html#more" data-i="navMore">更多资料</a>
-<select id="lang" class="lang" onchange="setLang(this.value)" aria-label="Language">{''.join(f'<option value="{k}">{n}</option>' for k, n in LANGS)}</select></div></div></nav>"""
-
-def foot(depth):
-    up = '../' * depth
-    return f"""<footer><div class="wrap">
-{tx('foot1','p')}{tx('foot2','p')}
-</div></footer><script src="{up}assets/site.js"></script></body></html>"""
+<link rel="stylesheet" href="{up}assets/style.css"></head>
+<body data-root="{up}"{data_lesson}>
+<header class="topbar"><div class="wrap"><a class="brand" href="{up}index.html">轻松学中文</a>
+<nav class="topnav" aria-label="Main"><a href="{up}index.html#levels" data-i="navLevels">HSK 等级</a><a href="{up}hsk2/index.html#mock" data-i="navMock">模拟考</a><a href="{up}index.html#more" data-i="navMore">更多资料</a>
+<label class="langbox"><span class="lbl" data-i="langLabel">界面语言</span><select class="lang" onchange="setLang(this.value)" aria-label="Language">{langs}</select></label></nav></div></header>
+{body}
+<footer><div class="wrap">{tx('foot1','p')}{tx('foot2','p')}</div></footer>
+{bnav}
+<script src="{up}assets/site.js"></script></body></html>"""
 
 def nwrender(s, words):
     def rep(m):
@@ -152,90 +69,156 @@ def nwrender(s, words):
         out.append(e(s[pos:m.start()])); out.append(rep(m)); pos = m.end()
     out.append(e(s[pos:]))
     return ''.join(out)
-
 def plain(s): return s.replace('{', '').replace('}', '')
 
-def level_tag(L): return '入门复习' if L['id'] == 'L1' else 'HSK 2'
+def home():
+    cards = ''
+    for lv in LEVELS:
+        n_open = len(lv['lessons']); cov = coverage(lv); pct = round(cov / lv['new'] * 100)
+        status = (f'<p class="st-open">{tx("openN", n=n_open)} · {tx("coverN", a=cov, b=lv["new"])}</p>' if n_open
+                  else f'<p class="st-soon">{tx("soon")}</p>')
+        cards += f"""<a class="lvcard" href="{lv['id']}/index.html"><div class="top"><span class="badge" style="background:{lv['color']}">HSK {lv['n']}</span>{tx('stage_' + lv['stage'], cls='small')}</div>
+<p style="margin:0;font-weight:700">{tx('lv_' + lv['id'])}</p>
+<div class="nums"><div><b>{lv['new']}</b> {tx('newWordsLbl', cls='small')}</div>{tx('totalN', cls='small', n=lv['total'])}</div>
+<p class="small" style="margin:0">{tx('examLabel')}{tx('exam_' + lv['exam'])}</p>
+<div class="bar"><i style="width:{pct}%;background:{lv['color']}"></i></div>{status}</a>"""
+    sizes = ' '.join(f'data-{lid.lower()}="{len(L["words"])}"' for lid, L in ALL.items())
+    res = [("https://hskstory.com/", "r1"), ("https://hskstory.com/guides/hsk-30-syllabus", "r2"),
+           ("https://hskstory.com/guides/hsk-3-syllabus", "r3"), ("https://www.chinesetest.cn", "r4")]
+    resh = ''.join(f'<a href="{u}" target="_blank" rel="noopener"><b>{tx(k + "t")} ↗</b>{tx(k + "d", cls="d")}</a>' for u, k in res)
+    body = f"""<section class="hero"><div class="wrap">
+<div class="l">{tx('heroKicker','p','kicker')}<h1>{tx('heroTitle')}</h1>{tx('heroP2','p','d')}
+<div class="acts"><a class="btn b-gold" href="#levels" data-i="chooseLevel">选择我的等级 →</a><a class="btn b-ink2" href="start/index.html" data-i="placementBtn">不知道自己几级？先上水平测试课</a></div></div>
+<div class="cont" id="cont" {sizes}>{tx('continue','p','k')}
+<div data-c="on" style="display:none;flex-direction:column;gap:10px">
+<span class="badge" style="background:#17698F;align-self:flex-start" data-c="tag"></span><p class="t" data-c="title"></p>
+<div><div class="row">{tx('wMast')}<b data-c="m" style="color:#14304A"></b></div><div class="bar" style="margin-top:6px"><i data-c="fill" style="width:0;background:#17698F"></i></div></div>
+<div class="row" style="justify-content:flex-start;gap:16px"><span>🔥 <b data-c="days"></b></span><span>⭐ <b data-c="stars"></b></span></div>
+<a class="btn b-ink" data-c="go" href="#" data-i="continueBtn">继续今天的练习 →</a></div>
+<div data-c="off" style="display:flex;flex-direction:column;gap:12px">{tx('notStarted','p')}<a class="btn b-ink" href="#levels" data-i="chooseLevel">选择我的等级 →</a></div>
+</div></div></section>
+<main class="wrap">
+<section class="block" id="levels">{tx('levelsTitle','h2','sec')}{tx('levelsLead','p','lead')}<div class="lvgrid">{cards}</div></section>
+<div class="split"><div class="place">{tx('placeKicker','p','k')}<h3>介绍我的国家</h3><div class="sub-tr" data-tr="title_L1" style="color:#14304A;margin:0"></div>{tx('placeP','p')}
+<a class="btn b-ink" style="align-self:flex-start" href="start/index.html" data-i="placeBtn">开始水平测试课 →</a></div>
+<div class="how">{tx('howTitle','p','small')}<ol><li>{tx('how1')}</li><li>{tx('how2')}</li><li>{tx('how3')}</li><li>{tx('how4')}</li></ol></div></div>
+<section class="block" id="more">{tx('moreTitle','h2','sec')}{tx('moreLead','p','lead')}<div class="res">{resh}</div></section>
+</main>"""
+    return page('轻松学中文 · 新版 HSK 1–6 课程', 0, body, 'navHome')
 
-def lesson_page(L, prev, nxt):
+def level_page(lv):
+    rows = ''
+    for k, lid in enumerate(lv['lessons'], 1):
+        L = ALL[lid]
+        rows += f"""<div class="lrow"><div class="no">{k:02d}</div><div class="tt"><p class="n">{e(L['title'])}</p><div class="sub-tr" data-tr="title_{lid}" style="color:var(--soft);margin:0;font-size:14px"></div>
+<p class="small"><span data-i="topic_{lid}">{e(L['topic'])}</span> · {tx('nWords', n=len(L['words']))}</p></div>
+<span class="chip" data-prog="{lid}" data-n="{len(L['words'])}">{e(TX['stTodo']['zh'])}</span>
+<div class="acts"><a class="btn b-blue" href="{k:02d}.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="{k:02d}-practice.html" data-i="btnPractice">🎯 练习</a></div></div>"""
+    n_open = len(lv['lessons'])
+    if n_open:
+        for k in range(n_open + 1, n_open + 3):
+            rows += f'<div class="lrow soon"><div class="no">{k:02d}</div><div class="tt">{tx("soon","p","n")}</div><span class="chip soon" data-i="soon">即将推出</span></div>'
+    else:
+        rows = f'<div class="empty">{tx("noLessons","p")}</div>'
+    cov = coverage(lv); ids = ','.join(lv['lessons'])
+    nwords = sum(len(ALL[l]['words']) for l in lv['lessons']); nwrite = sum(len(ALL[l]['write']) for l in lv['lessons'])
+    side = ''
+    if n_open:
+        topics = ''.join(f'<span data-i="topic_{l}">{e(ALL[l]["topic"])}</span>' for l in lv['lessons'])
+        side += f"""<div class="box">{tx('myProg','p','k')}
+<div><div data-sum="{ids}" data-n="{nwords}" data-kind="m" data-key="m" style="display:flex;justify-content:space-between;font-size:14px">{tx('wMast')}<b>0 / {nwords}</b></div><div class="bar" style="margin-top:6px"><i data-fill="m" style="width:0;background:var(--green)"></i></div></div>
+<div><div data-sum="{ids}" data-n="{nwrite}" data-kind="w" data-key="w" style="display:flex;justify-content:space-between;font-size:14px">{tx('wWrite')}<b>0 / {nwrite}</b></div><div class="bar" style="margin-top:6px"><i data-fill="w" style="width:0;background:var(--green)"></i></div></div></div>
+<div class="box">{tx('coverH','p','k')}{tx('coverP','p','small', a=cov, b=lv['new'], lv=lv['n'])}<div class="bar"><i style="width:{round(cov/lv['new']*100)}%;background:{lv['color']}"></i></div></div>"""
+    if n_open: side += f"""<div class="box dark" id="mock">{tx('mockH','p','k')}<p class="fun" style="margin:0;font-size:24px">{tx('mock1')}</p>{tx('mockSoon','p')}</div>"""
+    if n_open:
+        side += f'<div class="box">{tx("topicsH","p","k")}<div class="tags">{topics}</div></div>'
+    wkey = 'statWrite12' if lv['write_note'] else 'statWrite'
+    body = f"""<section class="lvhead" style="background:{lv['color']}"><div class="wrap">
+<p class="crumb"><a href="../index.html" data-i="navHome">首页</a>　/　HSK {lv['n']}</p>
+<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><span class="badge" style="background:#fff;color:{lv['color']};font-size:18px">HSK {lv['n']}</span><h1>{tx('lv_' + lv['id'])}</h1></div>
+<div class="stats4"><div><b>{lv['new']}</b>{tx('statNew','p', n=lv['total'])}</div><div><b>{lv['write']}</b>{tx(wkey,'p')}</div>
+<div><b style="font-size:20px">{tx('exam_' + lv['exam'])}</b>{tx('statExam','p')}</div><div><b>{n_open}</b>{tx('statLessons','p', n=lv['plan'])}</div></div>
+</div></section>
+<main class="wrap lvmain"><div class="lessons">{tx('lessonsH','h2','sec')}{rows}</div><aside>{side}</aside></main>"""
+    return page(f'HSK {lv["n"]} · 轻松学中文', 1, body, 'navLevels')
+
+def lesson_page(L, prev, nxt, depth, crumb, practice_href, pdf_href):
     words = {w: py for w, py, en, ru in L['words']}
-    n = L['num']
-    vcards = ''.join(f'<div class="vc" data-w="{e(w)}"><div class="zh">{e(w)}</div><div class="py">{e(py)}</div><div class="mn">{e(en)}<br>{e(ru)}</div></div>'
+    vcards = ''.join(f'<button type="button" class="vc" data-w="{e(w)}"><span class="zh">{e(w)}</span><span class="py">{e(py)}</span><span class="mn">{e(en)}<br>{e(ru)}</span></button>'
                      for w, py, en, ru in L['words'])
     grams = ''
     for g in L['gram']:
-        ex = ''.join(f'<p class="ex">{nwrender(x, words)} <button class="play" data-say="{e(plain(x))}">🔊</button></p>' for x in g['ex'])
+        ex = ''.join(f'<p class="ex"><span>{nwrender(x, words)}</span><button type="button" class="play" data-say="{e(plain(x))}" aria-label="🔊">{SPK}</button></p>' for x in g['ex'])
         pr = ''.join(f'<details><summary>{e(q)}</summary>{e(a)}</details>' for q, a in g.get('prac', []))
-        grams += f'<div class="gram"><h3>{e(g["title"])}</h3><div class="rule">{e(g["rule"])}</div>{ex}{pr}</div>'
+        grams += f'<div class="gram"><h3>{e(g["title"])}</h3><span class="rule">{e(g["rule"])}</span>{ex}{pr}</div>'
     narrative = len(set(s for s, _ in L['text'])) == 1
-    lines = ''.join(f'<div class="line">{"" if narrative else f"<span class=who>{e(s)}</span>"}<div class="say">{nwrender(t, words)}</div><button class="play" data-say="{e(plain(t))}">🔊</button></div>'
+    lines = ''.join(f'<div class="line">{"" if narrative else f"<span class=who>{e(s)}</span>"}<div class="say">{nwrender(t, words)}</div><button type="button" class="play" data-say="{e(plain(t))}" aria-label="🔊">{SPK}</button></div>'
                     for s, t in L['text'])
     qs = ''.join(f'<details><summary>{e(q)}</summary>{e(a)}</details>' for q, a in L['q'])
     chars = ''.join(f'<span>{e(c)}</span>' for c, py, w in L['write'])
-    pager = f'<div class="pager">{f"<a class=\"btn b-sky\" href=\"{prev}.html\" data-i=\"prev\">← 上一课</a>" if prev else "<span></span>"}{f"<a class=\"btn b-sky\" href=\"{nxt}.html\" data-i=\"next\">下一课 →</a>" if nxt else ""}</div>'
-    body = f"""{head(f'第 {n} 课 · {L["title"]} · {SITE}', 1)}
-<header class="lhead"><div class="wrap"><div class="k">{tx('lessonN', n=n)} · {e(level_tag(L)) if L['id']!='L1' else tx('tagReview')} · <span data-date="{DATES[L['id']]}">{e(L.get('date',''))}</span></div>
-<h1 class="fun">{e(L['title'])}</h1><div class="sub-tr" data-tr="title_{L['id']}"></div><p>{tx('topicLabel')}<span data-i="topic_{L['id']}">{e(L.get('topic',''))}</span>　·　{tx('nWords', n=len(L['words']))}</p>
-<div class="acts"><a class="btn b-gold" href="../practice/{L['id']}.html" data-i="startPractice">🎯 开始课后练习</a><a class="btn b-sky" href="../pdf/{e(PDF_NAMES[L['id']])}" data-i="pdf">📄 上课幻灯片（PDF）</a></div></div></header>
-<main class="wrap">
-<section class="block">{tx('secWords','h2','sec fun')}{tx('leadWords','p','lead')}
-<div class="toolbar"><button data-toggle="hide-py" data-box="vg" class="on" data-i="hidePy">隐藏拼音</button><button data-toggle="hide-mn" data-box="vg" class="on" data-i="hideMn">隐藏意思</button></div>
+    nav = lesson_nav(L['id'], L['title'])
+    tag = tx('placeKicker') if nav['level'] == 'start' else tx('lessonInLevel', lv=nav['lv'], n=nav['no'])
+    pager = '<div class="pager">' + (f'<a class="btn b-sky" href="{prev}" data-i="prev">← 上一课</a>' if prev else '<span></span>') + \
+            (f'<a class="btn b-sky" href="{nxt}" data-i="next">下一课 →</a>' if nxt else '') + '</div>'
+    body = f"""<section class="lhead"><div class="wrap"><p class="crumb">{crumb}</p>
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span class="badge" style="background:#17698F">{tag}</span>
+<span class="small" style="color:#C9DCE8"><span data-i="topic_{L['id']}">{e(L['topic'])}</span> · {tx('nWords', n=len(L['words']))} · {tx('grammarN', n=len(L['gram']))}</span></div>
+<h1>{e(L['title'])}</h1><div class="sub-tr" data-tr="title_{L['id']}"></div>
+<div class="acts"><a class="btn b-gold" href="{practice_href}" data-i="startPractice">🎯 开始课后练习</a><a class="btn b-ink2" href="{pdf_href}" data-i="pdf">📄 上课幻灯片（PDF）</a></div></div></section>
+<nav class="tabs" aria-label="Sections"><div class="wrap"><a href="#words" data-i="secWords">生词</a><a href="#grammar" data-i="secGram">语法和句型</a><a href="#text" data-i="secText">课文</a><a href="#chars" data-i="secChars">本课要会写的字</a><a href="{practice_href}" data-i="tabPractice">课后练习</a></div></nav>
+<main class="wrap lmain">
+<section id="words"><div class="sechead"><div>{tx('secWords','h2','sec')}{tx('leadWords','p')}</div>
+<div class="toolbar"><button type="button" data-toggle="hide-py" data-box="vg" class="on" data-i="hidePy">隐藏拼音</button><button type="button" data-toggle="hide-mn" data-box="vg" class="on" data-i="hideMn">隐藏意思</button></div></div>
 <div class="vgrid hide-py hide-mn" id="vg">{vcards}</div></section>
-<section class="block">{tx('secGram','h2','sec fun')}{grams}</section>
-<section class="block"><h2 class="sec fun">{tx('secText')}：{e(L['text_title'])}</h2>{tx('leadText','p','lead')}
-<div class="toolbar"><button data-toggle="allpy" data-box="tx" data-i="allPy">显示全部拼音</button></div>
+<section id="grammar">{tx('secGram','h2','sec')}<div class="ggrid" style="margin-top:12px">{grams}</div></section>
+<section id="text"><div class="sechead"><div><h2 class="sec">{tx('secText')}：{e(L['text_title'])}</h2>{tx('leadText','p')}</div>
+<div class="toolbar"><button type="button" data-toggle="allpy" data-box="tx" data-i="allPy">显示全部拼音</button></div></div>
 <div class="text" id="tx">{lines}</div><div class="qs">{qs}</div></section>
-<section class="block">{tx('secChars','h2','sec fun')}{tx('leadChars','p','lead')}<div class="chars">{chars}</div></section>
-{pager}
-</main>{foot(1)}"""
-    return body
+<section id="chars">{tx('secChars','h2','sec')}{tx('leadChars','p','lead')}<div class="chars">{chars}</div></section>
+<div class="cta"><div>{tx('ctaDone','p','t')}{tx('ctaList','p','d')}</div><a class="btn b-gold" href="{practice_href}" data-i="startPractice">🎯 开始课后练习</a></div>
+{pager}</main>"""
+    return page(f'{L["title"]} · 轻松学中文', depth, body, 'navLevels', json.dumps(nav, ensure_ascii=False))
 
-def index_page():
-    cards = ''
-    for L in ALL:
-        ws = '　'.join(w for w, *_ in L['words'][:4])
-        tag = tx('tagReview', cls='tag') if L['id'] == 'L1' else f'<span class="tag">{e(level_tag(L))}</span>'
-        cards += f"""<div class="lcard"><div class="k">{tx('lessonN', n=L['num'])}{tag}</div><h3 class="fun">{e(L['title'])}</h3><div class="sub-tr" data-tr="title_{L['id']}"></div>
-<div class="t"><span data-i="topic_{L['id']}">{e(L.get('topic',''))}</span> · {tx('nWords', n=len(L['words']))}</div><div class="w">{e(ws)}……</div>
-<div class="acts"><a class="btn b-blue" href="lessons/{L['id']}.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="practice/{L['id']}.html" data-i="btnPractice">🎯 练习</a></div></div>"""
-    res = [("https://hskstory.com/", "r1"), ("https://hskstory.com/guides/hsk-30-syllabus", "r2"),
-           ("https://hskstory.com/guides/hsk-3-syllabus", "r3"), ("https://www.chinesetest.cn", "r4")]
-    resh = ''.join(f'<a href="{u}" target="_blank" rel="noopener"><b>{tx(k+"t")} ↗</b>{tx(k+"d")}</a>' for u, k in res)
-    return f"""{head(SITE + ' · 新版 HSK 课程', 0)}
-<header class="hero"><div class="wrap"><h1 class="fun">轻松学中文</h1>
-{tx('heroP','p')}
-<a class="btn b-gold" href="lessons/L2.html" data-i="start">开始学习 →</a></div></header>
-<main class="wrap">
-<section class="block">{tx('howTitle','h2','sec fun')}{tx('howLead','p','lead')}
-<div class="steps"><div class="step"><b>1</b>{tx('step1')}</div><div class="step"><b>2</b>{tx('step2')}</div>
-<div class="step"><b>3</b>{tx('step3')}</div><div class="step"><b>4</b>{tx('step4')}</div></div></section>
-<section class="block" id="lessons">{tx('lessonsTitle','h2','sec fun')}{tx('lessonsLead','p','lead')}
-<div class="cards">{cards}</div></section>
-<section class="block" id="more">{tx('moreTitle','h2','sec fun')}{tx('moreLead','p','lead')}<div class="res">{resh}</div></section>
-</main>{foot(0)}"""
-
-def practice_page(lid):
+def practice_page(lid, depth, lesson_href):
     h = open(os.path.join(PRACTICE, f'{lid}_practice.html'), encoding='utf-8').read()
+    up = '../' * depth
     bar = ('<div style="max-width:760px;margin:0 auto;padding:12px 16px 0;display:flex;gap:14px;font-size:15px;font-weight:700">'
-           f'<a href="../lessons/{lid}.html" style="color:#17698F;text-decoration:none" data-i="backLesson">← 回到课文</a>'
-           '<a href="../index.html" style="color:#17698F;text-decoration:none" data-i="courseHome">课程首页</a></div>')
+           f'<a href="{lesson_href}" style="color:#17698F;text-decoration:none" data-i="backLesson">← 回到课文</a>'
+           f'<a href="{up}index.html" style="color:#17698F;text-decoration:none" data-i="courseHome">课程首页</a></div>')
     return h.replace('<div class="wrap" id="app"></div>', bar + '<div class="wrap" id="app"></div>', 1)
+
+def redirect(target):
+    return f'<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url={target}"><title>…</title></head><body><a href="{target}">{target}</a></body></html>'
 
 def main():
     if os.path.exists(OUT): shutil.rmtree(OUT)
-    for d in ('assets', 'lessons', 'practice', 'pdf'): os.makedirs(os.path.join(OUT, d))
+    for d in ('assets', 'pdf', 'start', 'lessons', 'practice'): os.makedirs(os.path.join(OUT, d))
     open(os.path.join(OUT, 'assets/style.css'), 'w', encoding='utf-8').write(CSS)
     full = dict(TX); full.update({f'title_{k}': v for k, v in TITLES.items()}); full.update({f'topic_{k}': v for k, v in TOPICS.items()})
     open(os.path.join(OUT, 'assets/site.js'), 'w', encoding='utf-8').write(JS.replace('__TX__', json.dumps(full, ensure_ascii=False)).replace('__LANGS__', json.dumps(LANGS, ensure_ascii=False)))
     open(os.path.join(OUT, '.nojekyll'), 'w').write('')
-    open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(index_page())
-    ids = [L['id'] for L in ALL]
-    for i, L in enumerate(ALL):
-        prev = ids[i-1] if i > 0 else None
-        nxt = ids[i+1] if i + 1 < len(ids) else None
-        open(os.path.join(OUT, 'lessons', L['id'] + '.html'), 'w', encoding='utf-8').write(lesson_page(L, prev, nxt))
-        open(os.path.join(OUT, 'practice', L['id'] + '.html'), 'w', encoding='utf-8').write(practice_page(L['id']))
-        shutil.copy(os.path.join(PDFS, PDF_NAMES[L['id']]), os.path.join(OUT, 'pdf', PDF_NAMES[L['id']]))
-    print('site ok', ids)
+    open(os.path.join(OUT, 'index.html'), 'w', encoding='utf-8').write(home())
+    for f in PDF_NAMES.values(): shutil.copy(os.path.join(PDFS, f), os.path.join(OUT, 'pdf', f))
+    L = ALL['L1']
+    crumb = f'<a href="../index.html" data-i="navHome">首页</a>　/　{tx("placementName")}'
+    open(os.path.join(OUT, 'start/index.html'), 'w', encoding='utf-8').write(
+        lesson_page(L, None, '../hsk2/01.html', 1, crumb, 'practice.html', f'../pdf/{PDF_NAMES["L1"]}'))
+    open(os.path.join(OUT, 'start/practice.html'), 'w', encoding='utf-8').write(practice_page('L1', 1, 'index.html'))
+    for lv in LEVELS:
+        d = os.path.join(OUT, lv['id']); os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, 'index.html'), 'w', encoding='utf-8').write(level_page(lv))
+        for k, lid in enumerate(lv['lessons'], 1):
+            L = ALL[lid]
+            prev = f'{k-1:02d}.html' if k > 1 else None
+            nxt = f'{k+1:02d}.html' if k < len(lv['lessons']) else None
+            crumb = f'<a href="../index.html" data-i="navHome">首页</a>　/　<a href="index.html">HSK {lv["n"]}</a>　/　{tx("lessonN", n=k)}'
+            open(os.path.join(d, f'{k:02d}.html'), 'w', encoding='utf-8').write(
+                lesson_page(L, prev, nxt, 1, crumb, f'{k:02d}-practice.html', f'../pdf/{PDF_NAMES[lid]}'))
+            open(os.path.join(d, f'{k:02d}-practice.html'), 'w', encoding='utf-8').write(practice_page(lid, 1, f'{k:02d}.html'))
+    for lid in ALL:
+        nav = lesson_nav(lid, '')
+        open(os.path.join(OUT, 'lessons', f'{lid}.html'), 'w').write(redirect('../' + nav['lesson']))
+        open(os.path.join(OUT, 'practice', f'{lid}.html'), 'w').write(redirect('../' + nav['practice']))
+    print('site ok')
 
 main()

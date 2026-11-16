@@ -1,32 +1,55 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>轻松学中文 · 新版 HSK 课程</title>
+<title>轻松学中文 · 新版 HSK 1–6 课程</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=ZCOOL+KuaiLe&display=swap">
-<link rel="stylesheet" href="assets/style.css"></head><body>
-<nav class="top"><div class="wrap"><a class="brand fun" href="index.html">轻松学中文</a>
-<div class="links"><a href="index.html#lessons" data-i="navLessons">课程</a><a href="index.html#more" data-i="navMore">更多资料</a>
-<select id="lang" class="lang" onchange="setLang(this.value)" aria-label="Language"><option value="zh">中文</option><option value="kk">Қазақша</option><option value="en">English</option><option value="ru">Русский</option></select></div></div></nav>
-<header class="hero"><div class="wrap"><h1 class="fun">轻松学中文</h1>
-<p data-i="heroP">按 2025 年新版 HSK 官方大纲编写的中文课：每节课一个生活话题，课文、生词、语法和课后练习都在这里。</p>
-<a class="btn b-gold" href="lessons/L2.html" data-i="start">开始学习 →</a></div></header>
+<link rel="stylesheet" href="assets/style.css"></head>
+<body data-root="">
+<header class="topbar"><div class="wrap"><a class="brand" href="index.html">轻松学中文</a>
+<nav class="topnav" aria-label="Main"><a href="index.html#levels" data-i="navLevels">HSK 等级</a><a href="hsk2/index.html#mock" data-i="navMock">模拟考</a><a href="index.html#more" data-i="navMore">更多资料</a>
+<label class="langbox"><span class="lbl" data-i="langLabel">界面语言</span><select class="lang" onchange="setLang(this.value)" aria-label="Language"><option value="zh">中文</option><option value="kk">Қазақша</option><option value="en">English</option><option value="ru">Русский</option></select></label></nav></div></header>
+<section class="hero"><div class="wrap">
+<div class="l"><p class="kicker" data-i="heroKicker">按 2025 新版 HSK 官方大纲编写</p><h1><span data-i="heroTitle">每天 15 分钟，轻松学中文</span></h1><p class="d" data-i="heroP2">从 HSK 1 到 HSK 6，每一课一个生活话题。先认汉字，再听、说、读、写，课后练习直到真正学会。</p>
+<div class="acts"><a class="btn b-gold" href="#levels" data-i="chooseLevel">选择我的等级 →</a><a class="btn b-ink2" href="start/index.html" data-i="placementBtn">不知道自己几级？先上水平测试课</a></div></div>
+<div class="cont" id="cont" data-l1="10" data-l2="20" data-l3="20" data-l4="20" data-l5="20"><p class="k" data-i="continue">继续学习</p>
+<div data-c="on" style="display:none;flex-direction:column;gap:10px">
+<span class="badge" style="background:#17698F;align-self:flex-start" data-c="tag"></span><p class="t" data-c="title"></p>
+<div><div class="row"><span data-i="wMast">已掌握的词</span><b data-c="m" style="color:#14304A"></b></div><div class="bar" style="margin-top:6px"><i data-c="fill" style="width:0;background:#17698F"></i></div></div>
+<div class="row" style="justify-content:flex-start;gap:16px"><span>🔥 <b data-c="days"></b></span><span>⭐ <b data-c="stars"></b></span></div>
+<a class="btn b-ink" data-c="go" href="#" data-i="continueBtn">继续今天的练习 →</a></div>
+<div data-c="off" style="display:flex;flex-direction:column;gap:12px"><p data-i="notStarted">还没开始学习。先选一个等级，或者上水平测试课。</p><a class="btn b-ink" href="#levels" data-i="chooseLevel">选择我的等级 →</a></div>
+</div></div></section>
 <main class="wrap">
-<section class="block"><h2 class="sec fun" data-i="howTitle">怎么学</h2><p class="lead" data-i="howLead">每天 15 分钟，一点一点进步。</p>
-<div class="steps"><div class="step"><b>1</b><span data-i="step1">上课：周一、周三 21:00</span></div><div class="step"><b>2</b><span data-i="step2">课后：每天打开“练习”，做今日任务</span></div>
-<div class="step"><b>3</b><span data-i="step3">练完：按“生成今日汇报”，发到群里</span></div><div class="step"><b>4</b><span data-i="step4">周六：周末小测，看看这周学会了多少</span></div></div></section>
-<section class="block" id="lessons"><h2 class="sec fun" data-i="lessonsTitle">课程</h2><p class="lead" data-i="lessonsLead">点“学课文”复习这节课，点“练习”做课后练习。练习进度保存在你自己的手机或电脑里，请用同一台设备练习。</p>
-<div class="cards"><div class="lcard"><div class="k"><span data-i="lessonN" data-v='{&quot;n&quot;: 1}'>第 1 课</span><span class="tag" data-i="tagReview">入门复习</span></div><h3 class="fun">介绍我的国家</h3><div class="sub-tr" data-tr="title_L1"></div>
-<div class="t"><span data-i="topic_L1">介绍国家和城市</span> · <span data-i="nWords" data-v='{&quot;n&quot;: 10}'>10 个生词</span></div><div class="w">国家　城市　天气　冬天……</div>
-<div class="acts"><a class="btn b-blue" href="lessons/L1.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="practice/L1.html" data-i="btnPractice">🎯 练习</a></div></div><div class="lcard"><div class="k"><span data-i="lessonN" data-v='{&quot;n&quot;: 2}'>第 2 课</span><span class="tag">HSK 2</span></div><h3 class="fun">我怎么去学校</h3><div class="sub-tr" data-tr="title_L2"></div>
-<div class="t"><span data-i="topic_L2">日常生活 · 出行方式</span> · <span data-i="nWords" data-v='{&quot;n&quot;: 20}'>20 个生词</span></div><div class="w">公交车　地铁　打车　机场……</div>
-<div class="acts"><a class="btn b-blue" href="lessons/L2.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="practice/L2.html" data-i="btnPractice">🎯 练习</a></div></div><div class="lcard"><div class="k"><span data-i="lessonN" data-v='{&quot;n&quot;: 3}'>第 3 课</span><span class="tag">HSK 2</span></div><h3 class="fun">我的爱好</h3><div class="sub-tr" data-tr="title_L3"></div>
-<div class="t"><span data-i="topic_L3">日常生活 · 休闲活动</span> · <span data-i="nWords" data-v='{&quot;n&quot;: 20}'>20 个生词</span></div><div class="w">爱好　运动　跑步　游泳……</div>
-<div class="acts"><a class="btn b-blue" href="lessons/L3.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="practice/L3.html" data-i="btnPractice">🎯 练习</a></div></div><div class="lcard"><div class="k"><span data-i="lessonN" data-v='{&quot;n&quot;: 4}'>第 4 课</span><span class="tag">HSK 2</span></div><h3 class="fun">我的好朋友</h3><div class="sub-tr" data-tr="title_L4"></div>
-<div class="t"><span data-i="topic_L4">日常生活 · 个人信息（外貌、穿着）</span> · <span data-i="nWords" data-v='{&quot;n&quot;: 20}'>20 个生词</span></div><div class="w">个子　高　长　眼睛……</div>
-<div class="acts"><a class="btn b-blue" href="lessons/L4.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="practice/L4.html" data-i="btnPractice">🎯 练习</a></div></div><div class="lcard"><div class="k"><span data-i="lessonN" data-v='{&quot;n&quot;: 5}'>第 5 课</span><span class="tag">HSK 2</span></div><h3 class="fun">在饭馆</h3><div class="sub-tr" data-tr="title_L5"></div>
-<div class="t"><span data-i="topic_L5">日常生活 · 饮食（在外吃饭）</span> · <span data-i="nWords" data-v='{&quot;n&quot;: 20}'>20 个生词</span></div><div class="w">饭馆　咖啡　奶茶　红茶……</div>
-<div class="acts"><a class="btn b-blue" href="lessons/L5.html" data-i="btnText">📖 学课文</a><a class="btn b-gold" href="practice/L5.html" data-i="btnPractice">🎯 练习</a></div></div></div></section>
-<section class="block" id="more"><h2 class="sec fun" data-i="moreTitle">更多资料</h2><p class="lead" data-i="moreLead">课外想多读一点、多了解考试，可以看这些网站。</p><div class="res"><a href="https://hskstory.com/" target="_blank" rel="noopener"><b><span data-i="r1t">HSKStory 分级故事</span> ↗</b><span data-i="r1d">按 HSK 等级写的中文小故事，有拼音和音频，适合课外阅读。</span></a><a href="https://hskstory.com/guides/hsk-30-syllabus" target="_blank" rel="noopener"><b><span data-i="r2t">新版 HSK 大纲介绍</span> ↗</b><span data-i="r2d">各级的话题、任务和语法一览（HSKStory）。</span></a><a href="https://hskstory.com/guides/hsk-3-syllabus" target="_blank" rel="noopener"><b><span data-i="r3t">HSK 3 大纲详解</span> ↗</b><span data-i="r3d">HSK 3 的话题、任务和语法（HSKStory）。下一阶段的目标。</span></a><a href="https://www.chinesetest.cn" target="_blank" rel="noopener"><b><span data-i="r4t">HSK 官方网站</span> ↗</b><span data-i="r4d">考试报名、考试日期和官方说明。</span></a></div></section>
-</main><footer><div class="wrap">
-<p data-i="foot1">生词和等级按 2025 年 11 月发布的新版 HSK 考试大纲（中外语言交流合作中心）编写；课文、例句和练习为本课程原创，人物均为虚构。</p><p data-i="foot2">笔顺动画：Hanzi Writer（MIT 许可）；笔顺数据：hanzi-writer-data（Arphic Public License）。字体：Google Fonts。</p>
-</div></footer><script src="assets/site.js"></script></body></html>
+<section class="block" id="levels"><h2 class="sec" data-i="levelsTitle">HSK 等级</h2><p class="lead" data-i="levelsLead">新版 HSK 分为初等（1–3 级）和中等（4–6 级）。选一个等级开始学习。</p><div class="lvgrid"><a class="lvcard" href="hsk1/index.html"><div class="top"><span class="badge" style="background:#2E7D4F">HSK 1</span><span class="small" data-i="stage_el">初等</span></div>
+<p style="margin:0;font-weight:700"><span data-i="lv_hsk1">入门：用中文打招呼、介绍自己</span></p>
+<div class="nums"><div><b>300</b> <span class="small" data-i="newWordsLbl">个新词</span></div><span class="small" data-i="totalN" data-v='{&quot;n&quot;: 300}'>累计约 300 词</span></div>
+<p class="small" style="margin:0"><span data-i="examLabel">考试：</span><span data-i="exam_LR">听力、阅读</span></p>
+<div class="bar"><i style="width:0%;background:#2E7D4F"></i></div><p class="st-soon"><span data-i="soon">即将推出</span></p></a><a class="lvcard" href="hsk2/index.html"><div class="top"><span class="badge" style="background:#17698F">HSK 2</span><span class="small" data-i="stage_el">初等</span></div>
+<p style="margin:0;font-weight:700"><span data-i="lv_hsk2">日常生活里的中文</span></p>
+<div class="nums"><div><b>197</b> <span class="small" data-i="newWordsLbl">个新词</span></div><span class="small" data-i="totalN" data-v='{&quot;n&quot;: 500}'>累计约 500 词</span></div>
+<p class="small" style="margin:0"><span data-i="examLabel">考试：</span><span data-i="exam_LR">听力、阅读</span></p>
+<div class="bar"><i style="width:41%;background:#17698F"></i></div><p class="st-open"><span data-i="openN" data-v='{&quot;n&quot;: 4}'>已开放 4 课</span> · <span data-i="coverN" data-v='{&quot;a&quot;: 80, &quot;b&quot;: 197}'>已覆盖 80 / 197 个官方词</span></p></a><a class="lvcard" href="hsk3/index.html"><div class="top"><span class="badge" style="background:#6B4FA0">HSK 3</span><span class="small" data-i="stage_el">初等</span></div>
+<p style="margin:0;font-weight:700"><span data-i="lv_hsk3">能聊更多生活话题</span></p>
+<div class="nums"><div><b>491</b> <span class="small" data-i="newWordsLbl">个新词</span></div><span class="small" data-i="totalN" data-v='{&quot;n&quot;: 1000}'>累计约 1000 词</span></div>
+<p class="small" style="margin:0"><span data-i="examLabel">考试：</span><span data-i="exam_F">听力、阅读、写作 ＋ 口语</span></p>
+<div class="bar"><i style="width:0%;background:#6B4FA0"></i></div><p class="st-soon"><span data-i="soon">即将推出</span></p></a><a class="lvcard" href="hsk4/index.html"><div class="top"><span class="badge" style="background:#9A3412">HSK 4</span><span class="small" data-i="stage_mid">中等</span></div>
+<p style="margin:0;font-weight:700"><span data-i="lv_hsk4">能比较流利地交流</span></p>
+<div class="nums"><div><b>990</b> <span class="small" data-i="newWordsLbl">个新词</span></div><span class="small" data-i="totalN" data-v='{&quot;n&quot;: 2000}'>累计约 2000 词</span></div>
+<p class="small" style="margin:0"><span data-i="examLabel">考试：</span><span data-i="exam_F">听力、阅读、写作 ＋ 口语</span></p>
+<div class="bar"><i style="width:0%;background:#9A3412"></i></div><p class="st-soon"><span data-i="soon">即将推出</span></p></a><a class="lvcard" href="hsk5/index.html"><div class="top"><span class="badge" style="background:#7A5C00">HSK 5</span><span class="small" data-i="stage_mid">中等</span></div>
+<p style="margin:0;font-weight:700"><span data-i="lv_hsk5">能读懂文章、看懂节目</span></p>
+<div class="nums"><div><b>1579</b> <span class="small" data-i="newWordsLbl">个新词</span></div><span class="small" data-i="totalN" data-v='{&quot;n&quot;: 3600}'>累计约 3600 词</span></div>
+<p class="small" style="margin:0"><span data-i="examLabel">考试：</span><span data-i="exam_F">听力、阅读、写作 ＋ 口语</span></p>
+<div class="bar"><i style="width:0%;background:#7A5C00"></i></div><p class="st-soon"><span data-i="soon">即将推出</span></p></a><a class="lvcard" href="hsk6/index.html"><div class="top"><span class="badge" style="background:#14304A">HSK 6</span><span class="small" data-i="stage_mid">中等</span></div>
+<p style="margin:0;font-weight:700"><span data-i="lv_hsk6">能比较自如地表达观点</span></p>
+<div class="nums"><div><b>1777</b> <span class="small" data-i="newWordsLbl">个新词</span></div><span class="small" data-i="totalN" data-v='{&quot;n&quot;: 5400}'>累计约 5400 词</span></div>
+<p class="small" style="margin:0"><span data-i="examLabel">考试：</span><span data-i="exam_F">听力、阅读、写作 ＋ 口语</span></p>
+<div class="bar"><i style="width:0%;background:#14304A"></i></div><p class="st-soon"><span data-i="soon">即将推出</span></p></a></div></section>
+<div class="split"><div class="place"><p class="k" data-i="placeKicker">入门 · 水平测试课</p><h3>介绍我的国家</h3><div class="sub-tr" data-tr="title_L1" style="color:#14304A;margin:0"></div><p data-i="placeP">不确定自己是几级？这节课从 HSK 1 的问题问到 HSK 4，聊一聊、读一读、玩闯关游戏，就知道该从哪一级开始。</p>
+<a class="btn b-ink" style="align-self:flex-start" href="start/index.html" data-i="placeBtn">开始水平测试课 →</a></div>
+<div class="how"><p class="small" data-i="howTitle">怎么学</p><ol><li><span data-i="how1">上课，或者自己读课文</span></li><li><span data-i="how2">每天打开“课后练习”，做今日任务</span></li><li><span data-i="how3">练完生成“今日汇报”，发给老师</span></li><li><span data-i="how4">每学完 4 课，做一次模拟考</span></li></ol></div></div>
+<section class="block" id="more"><h2 class="sec" data-i="moreTitle">更多资料</h2><p class="lead" data-i="moreLead">课外想多读一点、多了解考试，可以看这些网站。</p><div class="res"><a href="https://hskstory.com/" target="_blank" rel="noopener"><b><span data-i="r1t">HSKStory 分级故事</span> ↗</b><span class="d" data-i="r1d">按 HSK 等级写的中文小故事，有拼音和音频，适合课外阅读。</span></a><a href="https://hskstory.com/guides/hsk-30-syllabus" target="_blank" rel="noopener"><b><span data-i="r2t">新版 HSK 大纲介绍</span> ↗</b><span class="d" data-i="r2d">各级的话题、任务和语法一览（HSKStory）。</span></a><a href="https://hskstory.com/guides/hsk-3-syllabus" target="_blank" rel="noopener"><b><span data-i="r3t">HSK 3 大纲详解</span> ↗</b><span class="d" data-i="r3d">HSK 3 的话题、任务和语法（HSKStory）。下一阶段的目标。</span></a><a href="https://www.chinesetest.cn" target="_blank" rel="noopener"><b><span data-i="r4t">HSK 官方网站</span> ↗</b><span class="d" data-i="r4d">考试报名、考试日期和官方说明。</span></a></div></section>
+</main>
+<footer><div class="wrap"><p data-i="foot1">生词和等级按 2025 年 11 月发布的新版 HSK 考试大纲（中外语言交流合作中心）编写；课文、例句和练习为本课程原创，人物均为虚构。</p><p data-i="foot2">笔顺动画：Hanzi Writer（MIT 许可）；笔顺数据：hanzi-writer-data（Arphic Public License）。字体：Google Fonts。</p></div></footer>
+<nav class="bnav" aria-label="Menu"><a href="index.html" class="on"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11 12 4l9 7v9H3z"/></svg><span data-i="navHome">首页</span></a><a href="index.html#levels"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V6M16 20v-8M22 20H2"/></svg><span data-i="navLevels">HSK 等级</span></a><a href="index.html#levels" id="bnav-practice"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg><span data-i="navPractice">练习</span></a><a href="hsk2/index.html#mock"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span data-i="navMock">模拟考</span></a></nav>
+<script src="assets/site.js"></script></body></html>

@@ -3,6 +3,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from content import LESSONS
 from content_l1 import L1
 from i18n import PRACTICE, LANGS, TITLES
+from site_map import lesson_nav
 LESSONS = [L1] + LESSONS
 
 OUT = sys.argv[1]
@@ -16,13 +17,14 @@ def build(L):
     for c, py, w in L['write']:
         strokes[c] = json.load(open(os.path.join(DATA_DIR, c + '.json'), encoding='utf-8'))
     data = {
-        'id': L['id'], 'title': f"第 {L['num']} 课 · {L['title']}", 'sub': L.get('sub', '课后练习 · HSK 2'),
+        'id': L['id'], 'title': L['title'], 'sub': (lambda n: '课后练习 · 水平测试课' if n['level']=='start' else f"课后练习 · HSK {n['lv']} · 第 {n['no']} 课")(lesson_nav(L['id'], L['title'])),
         'words': [list(x) for x in L['words']], 'text_title': L['text_title'],
         'text': [list(x) for x in L['text']], 'narrative': len(set(s for s, _ in L['text'])) == 1,
         'q': [list(x) for x in L['q']], 'fill': [list(x) for x in L['fill']], 'fill_bank': L['fill_bank'],
         'order': [[list(c), a] for c, a in L['order']], 'fix': [list(x) for x in L['fix']],
         'write': [{'c': c, 'py': py, 'word': w} for c, py, w in L['write']],
         'tr': TITLES.get(L['id'], {}),
+        'nav': lesson_nav(L['id'], L['title']),
     }
     def js(o):  # safe for inline <script>
         return json.dumps(o, ensure_ascii=False).replace('</', '<\\/')

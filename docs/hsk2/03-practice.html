@@ -244,8 +244,10 @@ function mcq(mod, items, render){
   }
   next();
 }
+// 意思用哪种语言：俄语/哈萨克语界面显示俄文，英语界面显示英文，中文界面两种都显示
+function mean(w){ const x=W[w]; if(LANG==='en') return x.en; if(LANG==='ru'||LANG==='kk') return x.ru; return x.en+' / '+x.ru; }
 function distract(word, field, n=3){
-  return shuffle(L.words.filter(x=>x[0]!==word).map(x=>field==='w'?x[0]:x[2])).slice(0,n);
+  return shuffle(L.words.filter(x=>x[0]!==word).map(x=>field==='w'?x[0]:mean(x[0]))).slice(0,n);
 }
 // 2 听一听
 function listen(){
@@ -261,7 +263,7 @@ function listen(){
 function recog(){
   const ws=pickWords(10);
   const items=ws.map((w,k)=> k%2===0
-    ? {word:w, ans:W[w].en, opts:shuffle([W[w].en].concat(distract(w,'en'))), qtype:'h2m', retry:true}
+    ? {word:w, ans:mean(w), opts:shuffle([mean(w)].concat(distract(w,'mean'))), qtype:'h2m', retry:true}
     : {word:w, ans:w, opts:shuffle([w].concat(distract(w,'w'))), qtype:'m2h', retry:true});
   mcq('recog', items, {
     small:false,
@@ -385,13 +387,13 @@ function quiz(){
   const items=ws.map((w,k)=>{
     const t=k%3;
     if(t===0 && voice) return {word:w, ans:w, opts:shuffle([w].concat(distract(w,'w'))), kind:'listen'};
-    if(t===1) return {word:w, ans:W[w].en, opts:shuffle([W[w].en].concat(distract(w,'en'))), kind:'h2m'};
+    if(t===1) return {word:w, ans:mean(w), opts:shuffle([mean(w)].concat(distract(w,'mean'))), kind:'h2m'};
     return {word:w, ans:w, opts:shuffle([w].concat(distract(w,'w'))), kind:'m2h'};
   });
   mcq('quiz', items, {
     q: it => it.kind==='listen' ? `<p class="small">${t('quizListen')}</p><button class="spk" id="sp">🔊</button>`
           : it.kind==='h2m' ? `<p class="small">${t('h2m')}</p><div class="big">${esc(it.word)}</div>`
-          : `<p class="small">${t('m2h')}</p><div class="mid">${esc(W[it.word].en)}</div>`,
+          : `<p class="small">${t('m2h')}</p><div class="mid">${esc(W[it.word].en)}</div><p class="small">${esc(W[it.word].ru)}</p>`,
     after: it => { if(it.kind==='h2m') app.querySelectorAll('.opt').forEach(b=>b.classList.add('sm'));
                    const b=document.getElementById('sp'); if(b){ b.onclick=()=>speak(it.word); setTimeout(()=>speak(it.word),250);} }
   });

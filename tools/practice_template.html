@@ -238,8 +238,8 @@ function mcq(mod, items, render){
   }
   next();
 }
-// 意思用哪种语言：俄语/哈萨克语界面显示俄文，英语界面显示英文，中文界面两种都显示
-function mean(w){ const x=W[w]; if(LANG==='en') return x.en; if(LANG==='ru'||LANG==='kk') return x.ru; return x.en+' / '+x.ru; }
+// 词义：所有界面语言都同时显示英文和俄文
+function mean(w){ const x=W[w]; return x.en+' / '+x.ru; }
 function distract(word, field, n=3){
   return shuffle(L.words.filter(x=>x[0]!==word).map(x=>field==='w'?x[0]:mean(x[0]))).slice(0,n);
 }
